@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Inst Boost</string>
+
+    <string name="facebook_app_id" translatable="false">700245835460229</string>
+
+
+    <string name="client_id" translatable="false">319079067466470</string>
+    <!--<string name="redirect_url" translatable="false">https://instagram.com/</string>-->
+    <string name="redirect_url" translatable="false">https://github.com/aram-sadoyan-2/TikTkBst/</string>
+<!--    <string name="base_url" translatable="false">https://api.instagram.com/</string>-->
+    <string name="base_url" translatable="false">https://api.instagram.com/oauth/authorize?</string>
+</resources>
