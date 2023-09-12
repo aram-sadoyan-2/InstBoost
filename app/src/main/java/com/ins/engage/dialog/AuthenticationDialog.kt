@@ -31,7 +31,7 @@ class AuthenticationDialog(context: Context, var listener: AuthenticationListene
 //                "&redirect_uri=" + redirect_url +
 //                "&scope=user_profile,user_media&response_type=code"
 
-
+//https://graph.instagram.com/v11.0/10218560180051171/media
         request_url = "https://api.instagram.com/oauth/authorize?client_id=" +
                 context.resources.getString(R.string.client_id) +
                 "&redirect_uri=" + redirect_url +
@@ -49,7 +49,8 @@ class AuthenticationDialog(context: Context, var listener: AuthenticationListene
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                if (url?.contains("access_token=") == true) {
+                Log.d("dwd", "url = $url")
+                if (url?.contains("code") == true) {
                     val uri = Uri.parse(url)
                     var accessToken = uri.encodedFragment
                     accessToken = accessToken?.substring(accessToken.lastIndexOf("=") + 1) ?: ""
