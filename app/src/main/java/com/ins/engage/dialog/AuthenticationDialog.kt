@@ -49,13 +49,15 @@ class AuthenticationDialog(context: Context, var listener: AuthenticationListene
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                Log.d("dwd", "url = $url")
-                if (url?.contains("code") == true) {
+                //Log.d("dwd", "url = $url")
+                listener.onTokenReceived(url.orEmpty())
+                if (url?.contains("code=") == true) {
                     val uri = Uri.parse(url)
+
                     var accessToken = uri.encodedFragment
                     accessToken = accessToken?.substring(accessToken.lastIndexOf("=") + 1) ?: ""
                     Log.d("dwd", "ACCTOKEN $accessToken")
-                    listener.onTokenReceived(accessToken)
+
                 }
             }
 

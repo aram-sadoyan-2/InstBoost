@@ -1,7 +1,7 @@
 package com.ins.engage.module
 import android.content.Context
 import com.ins.engage.AppConstants
-import com.ins.engage.api.RetrofitPostService
+import com.ins.engage.api.RetrofitPostServiceApi
 import com.ins.engage.controller.AuthInterceptor
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
@@ -30,5 +30,5 @@ fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
     return OkHttpClient().newBuilder().addInterceptor(authInterceptor).build()
 }
 
-fun provideForecastApi(retrofit: Retrofit): RetrofitPostService = retrofit.create(RetrofitPostService::class.java)
+fun provideForecastApi(retrofit: Retrofit): RetrofitPostServiceApi = retrofit.create(RetrofitPostServiceApi::class.java)
 

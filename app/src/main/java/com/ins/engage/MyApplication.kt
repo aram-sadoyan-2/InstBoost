@@ -18,7 +18,7 @@ class MyApplication : Application() {
                 listOf(
                     coroutineModule,
                     networkModule(applicationContext),
-                    instModule
+                    instModule,
                 )
             )
         }

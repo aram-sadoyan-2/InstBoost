@@ -2,8 +2,13 @@ package com.ins.engage.repository
 
 import com.ins.engage.AppResult
 import com.ins.engage.model.request.InstAccessTokenRequestModel
-import com.ins.engage.model.response.BaseResponse
+import com.ins.engage.model.response.InstUserMediaJs
+import com.ins.engage.model.response.InstaProfileModel
 
 interface InstMainRepo {
-    suspend fun requestGoogleLogin(instAccessTokenRequestModel: InstAccessTokenRequestModel): AppResult<BaseResponse>
+    suspend fun requestShortInstAccsToken(instAccessTokenRequestModel: InstAccessTokenRequestModel): AppResult<String>
+    suspend fun requestLongLiveInstAccessToken(instAccessTokenRequestModel: InstAccessTokenRequestModel): AppResult<String>
+    suspend fun requestInstUserBasicData(accessToken: String): AppResult<String>
+    suspend fun requestMedia(): AppResult<InstUserMediaJs>
+    suspend fun getPostData(): AppResult<InstaProfileModel>
 }
