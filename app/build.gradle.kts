@@ -4,14 +4,14 @@ plugins {
 }
 
 android {
-    namespace = "com.ins.engage"
+    namespace = "com.ins.boostyou"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.ins.engage"
+        applicationId = "com.ins.boostyou"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
