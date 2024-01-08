@@ -17,7 +17,8 @@ class SplashScreenActivity : ComponentActivity() { //todo implement New Splash f
         if (username.isNotEmpty()) {
             startActivity(Intent(this@SplashScreenActivity, MainActivity::class.java))
         } else {
-            startActivity(Intent(this@SplashScreenActivity, LoginActivity::class.java))
+           // startActivity(Intent(this@SplashScreenActivity, LoginActivity::class.java))
+            startActivity(Intent(this@SplashScreenActivity, MainActivity::class.java))
         }
         finish()
     }

@@ -1,9 +1,9 @@
 package com.ins.engage.api
 
 import com.ins.engage.model.response.InstAccessTokenResponseModel
+import com.ins.engage.model.response.InstPrData
 import com.ins.engage.model.response.InstUserMediaJs
 import com.ins.engage.model.response.InstaProfileModel
-import retrofit2.Call
 import retrofit2.http.*
 
 
@@ -11,6 +11,20 @@ interface RetrofitPostServiceApi {
 
     @GET
     suspend fun getPostData(@Url str: String?): InstaProfileModel?
+
+
+    //IwAR2mBTuLHk_4fEdzyKXvshbcK5UysGPJ3Gi_rj6NTior79dsrUbPSgns1LA
+    @GET("https://www.instagram.com/api/v1/users/web_profile_info/")
+    suspend fun getPostDataFromNewJson(
+        @Query("username") userName: String,
+       // @Query("fbclid") fbclId: String,
+        @Header("sec-fetch-dest") secFetchDest: String,
+        @Header("sec-fetch-mode") secFetchMode: String,
+        @Header("sec-fetch-site") secFetchSite: String,
+        @Header("X-IG-App-ID") appId: Long,
+        @Header("X-IG-WWW-Claim") claim: Int,
+        @Header("X-Requested-With") requestedWith: String,
+    ): Any?
 
     @FormUrlEncoded
     @POST("oauth/access_token")

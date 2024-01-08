@@ -12,6 +12,7 @@ import com.ins.engage.controller.FileDataUtils.Companion.saveTokenIntoLocal
 import com.ins.engage.controller.FileDataUtils.Companion.saveUsNmAndId
 import com.ins.engage.handleSuccess
 import com.ins.engage.model.request.InstAccessTokenRequestModel
+import com.ins.engage.model.response.InstPrData
 import com.ins.engage.model.response.InstUserMediaJs
 import com.ins.engage.model.response.InstaProfileModel
 import com.ins.engage.repository.InstMainRepo
@@ -117,6 +118,33 @@ class InstMainRepoImpl(
     override suspend fun getPostData(): AppResult<InstaProfileModel> {
         return try {
             val response = api.getPostData(getPostDataUrl())
+            if (response == null) {
+                Log.d("dwd", "getPostData Success $response")
+                AppResult.Error(Exception("empty data"))
+            } else {
+                handleSuccess(response)
+            }
+        } catch (e: Exception) {
+            Log.d("dwd", "getPostData Catch Error " + e.message)
+            AppResult.Error(e)
+        }
+    }
+
+    override suspend fun getPostDataFromNewJson(): AppResult<InstPrData> {
+        return try {
+            //TODO NEW INST DATA REQUEST
+//            val response2 = api.getPostDataFromNewJson(
+//                userName = "aramsadoy",
+//                secFetchDest = "empty",
+//                secFetchMode = "cors",
+//                secFetchSite = "same-origin",
+//                appId = 936619743392459,
+//                claim = 0,
+//                requestedWith = "XMLHttpRequest"
+//            )
+
+            val response = InstPrData()
+
             if (response == null) {
                 Log.d("dwd", "getPostData Success $response")
                 AppResult.Error(Exception("empty data"))

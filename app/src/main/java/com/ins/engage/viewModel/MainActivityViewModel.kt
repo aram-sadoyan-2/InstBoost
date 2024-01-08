@@ -4,6 +4,7 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ins.engage.AppResult
+import com.ins.engage.model.response.InstPrData
 import com.ins.engage.model.response.InstUserMediaJs
 import com.ins.engage.model.response.InstaProfileModel
 import com.ins.engage.module.ProfDispatchers
@@ -22,8 +23,8 @@ class MainActivityViewModel(
     val userMedia: LiveData<AppResult<InstUserMediaJs>>
         get() = _userMedia
 
-    private val _userPostData = MutableLiveData<AppResult<InstaProfileModel>>()
-    val userPostData: LiveData<AppResult<InstaProfileModel>>
+    private val _userPostData = MutableLiveData<AppResult<InstPrData>>()
+    val userPostData: LiveData<AppResult<InstPrData>>
         get() = _userPostData
 
 
@@ -39,9 +40,10 @@ class MainActivityViewModel(
         }
     }
 
-    fun requestUserPostData() {
+
+    fun requestDataFromNewJson() {
         launchOnBackground {
-            _userPostData.postValue(repo.getPostData())
+            _userPostData.postValue(repo.getPostDataFromNewJson())
         }
     }
 
