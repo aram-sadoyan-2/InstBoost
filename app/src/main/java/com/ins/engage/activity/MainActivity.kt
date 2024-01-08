@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun requestInstUserdata() {
-        mainActivityViewModel.requestUserPostData()
+        mainActivityViewModel.requestDataFromNewJson()
         mainActivityViewModel.userPostData.observe(this) {
             it?.let {
                 when (it) {
