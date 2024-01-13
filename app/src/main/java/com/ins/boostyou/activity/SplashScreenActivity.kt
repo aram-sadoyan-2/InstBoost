@@ -11,8 +11,8 @@ import com.ins.boostyou.startup.KoinInitializer
 class SplashScreenActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val initializer = AppInitializer.getInstance(this)
-        initializer.initializeComponent(KoinInitializer::class.java)
+       // val initializer = AppInitializer.getInstance(this)
+        //initializer.initializeComponent(KoinInitializer::class.java)
         checkForTokenAndStartFlow()
     }
 

@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import com.ins.boostyou.AppResult
-import com.ins.boostyou.billing.InstBoostPaymentService
-import com.ins.boostyou.controller.InstKoinHolder
 import com.ins.boostyou.databinding.ActivityMainBinding
 import com.ins.boostyou.viewModel.MainActivityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -22,10 +20,6 @@ class MainActivity : ComponentActivity() {
         requestInstUserdata()
         requestPackages()
         setUpViews()
-
-        val subscriptionService by InstKoinHolder.inject(this, InstBoostPaymentService::class.java)
-        subscriptionService.initialize()
-
     }
 
     private fun setUpViews() {
