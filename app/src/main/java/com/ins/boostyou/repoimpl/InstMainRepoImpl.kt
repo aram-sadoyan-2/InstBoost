@@ -2,17 +2,15 @@ package com.ins.boostyou.repoimpl
 
 import android.content.Context
 import android.util.Log
-import com.ins.boostyou.AppConstants.Companion.POST_DT_PREFIX
-import com.ins.boostyou.AppConstants.Companion.POST_DT_SUFFIX
 import com.ins.boostyou.AppResult
 import com.ins.boostyou.api.RetrofitPostServiceApi
 import com.ins.boostyou.controller.FileDataUtils.Companion.getTokenFromLocal
-import com.ins.boostyou.controller.FileDataUtils.Companion.getUsNameFromLocal
 import com.ins.boostyou.controller.FileDataUtils.Companion.saveTokenIntoLocal
 import com.ins.boostyou.controller.FileDataUtils.Companion.saveUsNmAndId
 import com.ins.boostyou.handleSuccess
 import com.ins.boostyou.model.request.InstAccessTokenRequestModel
 import com.ins.boostyou.model.response.InstUserMediaJs
+import com.ins.boostyou.model.response.boostyou.RemotePackages
 import com.ins.boostyou.repository.InstMainRepo
 import com.ins.engage.model.response.InstPrData
 
@@ -129,6 +127,24 @@ class InstMainRepoImpl(
 
             val response = InstPrData()
 
+            if (response == null) {
+                Log.d("dwd", "getPostData Success $response")
+                AppResult.Error(Exception("empty data"))
+            } else {
+                handleSuccess(response)
+            }
+        } catch (e: Exception) {
+            Log.d("dwd", "getPostData Catch Error " + e.message)
+            AppResult.Error(e)
+        }
+    }
+
+
+
+
+    override suspend fun requestRemotePackages(): AppResult<List<RemotePackages>> {
+        return try {
+            val response = api.requestRemotePackages()
             if (response == null) {
                 Log.d("dwd", "getPostData Success $response")
                 AppResult.Error(Exception("empty data"))

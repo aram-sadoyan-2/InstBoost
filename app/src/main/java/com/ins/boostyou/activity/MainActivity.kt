@@ -16,9 +16,10 @@ class MainActivity : ComponentActivity() {
         bindingView = ActivityMainBinding.inflate(layoutInflater)
         val view = bindingView.root
         setContentView(view)
+        Log.d("dwd","MainActivity start")
         requestInstUserdata()
+        requestPackages()
         setUpViews()
-
     }
 
     private fun setUpViews() {
@@ -33,6 +34,23 @@ class MainActivity : ComponentActivity() {
                     is AppResult.Success -> {
                         Log.d("dwd", "requestInstUserdata ---- " + it.successData)
                         initViews()
+                    }
+
+                    is AppResult.Error -> {
+                        Log.d("dwd", "requestInstUserdata Error")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestPackages() {
+        mainActivityViewModel.requestRemotePackages()
+        mainActivityViewModel.requestRemotePackages.observe(this) {
+            it?.let {
+                when (it) {
+                    is AppResult.Success -> {
+                        Log.d("dwd", "requestInstUserdata ---- " + it.successData)
                     }
 
                     is AppResult.Error -> {

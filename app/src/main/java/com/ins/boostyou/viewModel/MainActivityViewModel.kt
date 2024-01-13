@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ins.boostyou.AppResult
 import com.ins.boostyou.model.response.InstUserMediaJs
+import com.ins.boostyou.model.response.boostyou.RemotePackages
 import com.ins.boostyou.module.ProfDispatchers
 import com.ins.boostyou.repository.InstMainRepo
 import com.ins.engage.model.response.InstPrData
@@ -26,6 +27,10 @@ class MainActivityViewModel(
     val userPostData: LiveData<AppResult<InstPrData>>
         get() = _userPostData
 
+    private val _requestRemotePackages = MutableLiveData<AppResult<List<RemotePackages>>>()
+    val requestRemotePackages: LiveData<AppResult<List<RemotePackages>>>
+        get() = _requestRemotePackages
+
 
     fun requestInstUserBasicData(accessToken: String) {
         launchOnBackground {
@@ -43,6 +48,12 @@ class MainActivityViewModel(
     fun requestDataFromNewJson() {
         launchOnBackground {
             _userPostData.postValue(repo.getPostDataFromNewJson())
+        }
+    }
+
+    fun requestRemotePackages() {
+        launchOnBackground {
+            _requestRemotePackages.postValue(repo.requestRemotePackages())
         }
     }
 

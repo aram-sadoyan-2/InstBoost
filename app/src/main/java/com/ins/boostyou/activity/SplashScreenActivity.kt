@@ -3,12 +3,16 @@ package com.ins.boostyou.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.startup.AppInitializer
 import com.ins.boostyou.controller.FileDataUtils
+import com.ins.boostyou.startup.KoinInitializer
 
 
-class SplashScreenActivity : ComponentActivity() { //todo implement New Splash func
+class SplashScreenActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+       // val initializer = AppInitializer.getInstance(this)
+        //initializer.initializeComponent(KoinInitializer::class.java)
         checkForTokenAndStartFlow()
     }
 

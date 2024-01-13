@@ -10,14 +10,13 @@ import com.android.billingclient.api.PurchasesUpdatedListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 class GoogleBillingServiceImpl(
     private val context: Context,
-    private val defaultScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
 ) : PurchasesUpdatedListener, BillingClientStateListener, InstBoostPaymentService {
-
+    private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var billingClient: BillingClient? = null
-
 
     override fun initialize() {
         billingClient =
@@ -37,7 +36,14 @@ class GoogleBillingServiceImpl(
     }
 
     override fun onBillingSetupFinished(billingResult: BillingResult) {
-        Log.d("dwd", "GoogleBillingServiceImpl onBillingSetupFinished " + billingResult.responseCode)
+        coroutineScope.launch {
+            if (billingResult.responseCode ==  BillingClient.BillingResponseCode.OK) {
+                // The BillingClient is ready. You can query purchases here.
+                Log.d("dwd", "GoogleBillingServiceImpl onBillingSetupFinished ")
+
+            }
+        }
+
     }
 
 }
