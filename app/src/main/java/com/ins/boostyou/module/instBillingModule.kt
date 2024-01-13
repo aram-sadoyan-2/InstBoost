@@ -7,6 +7,6 @@ import org.koin.dsl.module
 
 val instBillingModule = module {
     factory<InstBoostPaymentService> {
-        GoogleBillingServiceImpl(get())
+        GoogleBillingServiceImpl(get(), get())
     }
 }

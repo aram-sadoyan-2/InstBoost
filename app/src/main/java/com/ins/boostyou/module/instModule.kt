@@ -1,5 +1,7 @@
 package com.ins.boostyou.module
 
+import com.ins.boostyou.billing.RemoteSettingsService
+import com.ins.boostyou.billing.RemoteSettingsServiceImpl
 import com.ins.boostyou.repository.InstMainRepo
 import com.ins.boostyou.viewModel.InstMainViewModel
 import com.ins.boostyou.viewModel.MainActivityViewModel
@@ -13,6 +15,9 @@ val instModule = module {
     factory<InstMainRepo> {
         InstMainRepoImpl(get(), get())
     }
+
+    single<RemoteSettingsService> { RemoteSettingsServiceImpl(get()) }
+
 
     viewModel {
         InstMainViewModel(get(), get())
