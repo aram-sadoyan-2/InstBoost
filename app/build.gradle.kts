@@ -96,6 +96,7 @@ dependencies {
     implementation("org.jsoup:jsoup:1.13.1")
 
     implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("androidx.startup:startup-runtime:1.1.1")
 
 }
 

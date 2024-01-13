@@ -20,7 +20,7 @@
             android:theme="@style/Theme.InstBoost"
             android:exported="false" />
         <activity
-            android:name=".TestActivity"
+            android:name=".activity.SplashScreenActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>

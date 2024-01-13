@@ -2,6 +2,7 @@ package com.ins.boostyou.api
 
 import com.ins.boostyou.model.response.InstAccessTokenResponseModel
 import com.ins.boostyou.model.response.InstUserMediaJs
+import com.ins.boostyou.model.response.boostyou.RemotePackages
 import retrofit2.http.*
 
 
@@ -48,5 +49,8 @@ interface RetrofitPostServiceApi {
         @Query("fields") fields: String,
         @Query("access_token") accessToken: String
     ): InstUserMediaJs?
+
+    @POST("https://boostyou.convocraftapp.com/getPrices.php")
+    suspend fun requestRemotePackages(): List<RemotePackages>?
 
 }
