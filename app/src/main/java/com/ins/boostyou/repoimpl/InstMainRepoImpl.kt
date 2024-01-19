@@ -115,15 +115,15 @@ class InstMainRepoImpl(
     override suspend fun getPostDataFromNewJson(): AppResult<InstPrData> {
         return try {
             //TODO NEW INST DATA REQUEST
-//            val response2 = api.getPostDataFromNewJson(
-//                userName = "aramsadoy",
-//                secFetchDest = "empty",
-//                secFetchMode = "cors",
-//                secFetchSite = "same-origin",
-//                appId = 936619743392459,
-//                claim = 0,
-//                requestedWith = "XMLHttpRequest"
-//            )
+            val response2 = api.getPostDataFromNewJson(
+                userName = "vrdrobe.app",
+                secFetchDest = "empty",
+                secFetchMode = "cors",
+                secFetchSite = "same-origin",
+                appId = 936619743392459,
+                claim = 0,
+                requestedWith = "XMLHttpRequest"
+            )
 
             val response = InstPrData()
 

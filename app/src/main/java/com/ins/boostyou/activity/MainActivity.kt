@@ -18,8 +18,8 @@ class MainActivity : ComponentActivity() {
         setContentView(view)
         Log.d("dwd","MainActivity start")
         requestInstUserdata()
-        requestPackages()
-        setUpViews()
+       // requestPackages()
+       // setUpViews()
     }
 
     private fun setUpViews() {
@@ -39,6 +39,8 @@ class MainActivity : ComponentActivity() {
                     is AppResult.Error -> {
                         Log.d("dwd", "requestInstUserdata Error")
                     }
+
+                    else -> {}
                 }
             }
         }

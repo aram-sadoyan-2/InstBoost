@@ -40,16 +40,17 @@ class GoogleBillingServiceImpl(
     }
 
     override fun onBillingSetupFinished(billingResult: BillingResult) {
-        coroutineScope.launch {
+        Log.d("dwd", "GoogleBillingServiceImpl onBillingSetupFinished $billingResult.responseCode")
+        //coroutineScope.launch {
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 // The BillingClient is ready. You can query purchases here.
-                getProductsInfo(remoteSettings.getRemoteSettings())
+              //  getProductsInfo(remoteSettings.getRemoteSettings())
                 //todo if packageIds exists
                 //todo query qurchase
                 //todo else call again to back-end
                 Log.d("dwd", "GoogleBillingServiceImpl onBillingSetupFinished ")
             }
-        }
+       // }
     }
 
     suspend fun getProductsInfo(listOfProductIds: List<RemotePackages>?) {
