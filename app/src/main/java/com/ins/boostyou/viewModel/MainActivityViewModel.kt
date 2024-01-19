@@ -8,7 +8,7 @@ import com.ins.boostyou.model.response.InstUserMediaJs
 import com.ins.boostyou.model.response.boostyou.RemotePackages
 import com.ins.boostyou.module.ProfDispatchers
 import com.ins.boostyou.repository.InstMainRepo
-import com.ins.engage.model.response.InstPrData
+import com.ins.boostyou.model.response.InstPrData
 
 class MainActivityViewModel(
     private var repo: InstMainRepo,
@@ -32,17 +32,17 @@ class MainActivityViewModel(
         get() = _requestRemotePackages
 
 
-    fun requestInstUserBasicData(accessToken: String) {
-        launchOnBackground {
-            _userName.postValue(repo.requestInstUserBasicData(accessToken))
-        }
-    }
+//    fun requestInstUserBasicData(accessToken: String) {
+//        launchOnBackground {
+//            _userName.postValue(repo.requestInstUserBasicData(accessToken))
+//        }
+//    }
 
-    fun requestMedia() {
-        launchOnBackground {
-            _userMedia.postValue(repo.requestMedia())
-        }
-    }
+//    fun requestMedia() {
+//        launchOnBackground {
+//            _userMedia.postValue(repo.requestMedia())
+//        }
+//    }
 
 
     fun requestDataFromNewJson() {

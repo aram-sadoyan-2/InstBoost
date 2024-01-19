@@ -12,7 +12,7 @@ import com.ins.boostyou.model.request.InstAccessTokenRequestModel
 import com.ins.boostyou.model.response.InstUserMediaJs
 import com.ins.boostyou.model.response.boostyou.RemotePackages
 import com.ins.boostyou.repository.InstMainRepo
-import com.ins.engage.model.response.InstPrData
+import com.ins.boostyou.model.response.InstPrData
 
 class InstMainRepoImpl(
     private val api: RetrofitPostServiceApi,
@@ -114,8 +114,7 @@ class InstMainRepoImpl(
 
     override suspend fun getPostDataFromNewJson(): AppResult<InstPrData> {
         return try {
-            //TODO NEW INST DATA REQUEST
-            val response2 = api.getPostDataFromNewJson(
+            val response = api.getPostDataFromNewJson(
                 userName = "vrdrobe.app",
                 secFetchDest = "empty",
                 secFetchMode = "cors",
@@ -124,9 +123,6 @@ class InstMainRepoImpl(
                 claim = 0,
                 requestedWith = "XMLHttpRequest"
             )
-
-            val response = InstPrData()
-
             if (response == null) {
                 Log.d("dwd", "getPostData Success $response")
                 AppResult.Error(Exception("empty data"))

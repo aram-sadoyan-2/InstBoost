@@ -1,4 +1,4 @@
-package com.ins.engage.model.response
+package com.ins.boostyou.model.response
 
 import com.google.gson.annotations.SerializedName
 

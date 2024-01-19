@@ -39,7 +39,6 @@ class MainActivity : ComponentActivity() {
                     is AppResult.Error -> {
                         Log.d("dwd", "requestInstUserdata Error")
                     }
-
                     else -> {}
                 }
             }

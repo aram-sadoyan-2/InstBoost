@@ -1,10 +1,9 @@
 package com.ins.boostyou.api
 
-import com.google.gson.JsonObject
 import com.ins.boostyou.model.response.InstAccessTokenResponseModel
 import com.ins.boostyou.model.response.InstUserMediaJs
 import com.ins.boostyou.model.response.boostyou.RemotePackages
-import retrofit2.Response
+import com.ins.boostyou.model.response.InstPrData
 import retrofit2.http.*
 
 
@@ -20,7 +19,7 @@ interface RetrofitPostServiceApi {
         @Header("X-IG-App-ID") appId: Long,
         @Header("X-IG-WWW-Claim") claim: Int,
         @Header("X-Requested-With") requestedWith: String,
-    ): Response<JsonObject>?
+    ): InstPrData?
 
     @FormUrlEncoded
     @POST("oauth/access_token")
