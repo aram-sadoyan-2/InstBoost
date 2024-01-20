@@ -17,8 +17,8 @@ class MainActivity : ComponentActivity() {
         val view = bindingView.root
         setContentView(view)
         Log.d("dwd","MainActivity start")
-        requestInstUserdata()
-       // requestPackages()
+        //requestInstUserdata()
+        //requestPackages()
        // setUpViews()
     }
 

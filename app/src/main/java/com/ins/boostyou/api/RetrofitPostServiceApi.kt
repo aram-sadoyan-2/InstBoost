@@ -1,9 +1,11 @@
 package com.ins.boostyou.api
 
+import com.ins.boostyou.model.response.BaseResponse
 import com.ins.boostyou.model.response.InstAccessTokenResponseModel
 import com.ins.boostyou.model.response.InstUserMediaJs
 import com.ins.boostyou.model.response.boostyou.RemotePackages
 import com.ins.boostyou.model.response.InstPrData
+import com.ins.boostyou.model.response.boostyou.UserInfo
 import retrofit2.http.*
 
 
@@ -12,7 +14,7 @@ interface RetrofitPostServiceApi {
     @GET("https://www.instagram.com/api/v1/users/web_profile_info/")
     suspend fun getPostDataFromNewJson(
         @Query("username") userName: String,
-       // @Query("fbclid") fbclId: String,
+        // @Query("fbclid") fbclId: String,
         @Header("sec-fetch-dest") secFetchDest: String,
         @Header("sec-fetch-mode") secFetchMode: String,
         @Header("sec-fetch-site") secFetchSite: String,
@@ -51,7 +53,29 @@ interface RetrofitPostServiceApi {
         @Query("access_token") accessToken: String
     ): InstUserMediaJs?
 
-    @POST("https://boostyou.convocraftapp.com/getPrices.php")
-    suspend fun requestRemotePackages(): List<RemotePackages>?
+
+
+
+
+
+    @FormUrlEncoded
+    @POST("/api.php")
+    suspend fun requestRemotePackages(
+        @Field("action") action: String? = "getPriceList"
+    ): List<RemotePackages>?
+
+    @FormUrlEncoded
+    @POST("/api.php")
+    suspend fun createUserIfNotExist(
+        @Field("user_name") userName: String,
+        @Field("action") action: String? = "createUserIfNotExist",
+    ): BaseResponse?
+
+    @FormUrlEncoded
+    @POST("/api.php")
+    suspend fun getUserInfo(
+        @Field("user_name") userName: String,
+        @Field("action") action: String? = "getUserInfo",
+    ): UserInfo?
 
 }

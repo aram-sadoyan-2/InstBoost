@@ -1,9 +1,9 @@
 package com.ins.boostyou
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingResult
@@ -12,15 +12,19 @@ import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.queryProductDetails
 import com.ins.boostyou.composable.FistPage
 import com.ins.boostyou.databinding.ActivityLoginBinding
+import com.ins.boostyou.viewModel.MainActivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TestActivity: ComponentActivity() {
     private lateinit var bindingView: ActivityLoginBinding
+    private val mainActivityViewModel: MainActivityViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestPackages()
         bindingView = ActivityLoginBinding.inflate(layoutInflater)
         setContent {
             FistPage()
@@ -60,6 +64,23 @@ class TestActivity: ComponentActivity() {
                 // leverage queryProductDetails Kotlin extension function
                 billingClient.queryProductDetails(params.build()).let(::println)
 
+            }
+        }
+    }
+
+    private fun requestPackages() {
+        mainActivityViewModel.requestRemotePackages()
+        mainActivityViewModel.requestRemotePackages.observe(this) {
+            it?.let {
+                when (it) {
+                    is AppResult.Success -> {
+                        Log.d("dwd", "requestInstUserdata ---- " + it.successData)
+                    }
+
+                    is AppResult.Error -> {
+                        Log.d("dwd", "requestInstUserdata Error")
+                    }
+                }
             }
         }
     }

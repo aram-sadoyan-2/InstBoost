@@ -20,7 +20,7 @@ fun networkModule(context: Context) = module {
 }
 
 fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder().baseUrl(AppConstants.BASE_URL).client(okHttpClient)
+    return Retrofit.Builder().baseUrl(AppConstants.BOOST_YOU_BASE_URL).client(okHttpClient)
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()

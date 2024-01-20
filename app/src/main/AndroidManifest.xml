@@ -20,7 +20,7 @@
             android:theme="@style/Theme.InstBoost"
             android:exported="false" />
         <activity
-            android:name=".TestActivity"
+            android:name=".activity.SplashScreenActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -29,10 +29,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.LoginActivity"
-            android:exported="false"
-            android:theme="@style/Theme.InstBoost"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
