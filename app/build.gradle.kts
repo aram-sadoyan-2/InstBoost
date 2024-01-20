@@ -7,6 +7,10 @@ android {
     namespace = "com.ins.boostyou"
     compileSdk = 34
 
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+
     defaultConfig {
         applicationId = "com.ins.boostyou"
         minSdk = 24

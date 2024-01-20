@@ -48,7 +48,7 @@ fun makeObject(): List<ImagesAndInfoEntity> {
     val data = """
         [
     {
-        "image_url": "https://scontent.fevn7-1.fna.fbcdn.net/v/t39.30808-6/333040046_3439834242958892_6701204803101473128_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=VM5bgunYteQAX_GLvKl&_nc_ht=scontent.fevn7-1.fna&oh=00_AfCRLYM8Pf4kcaJWdKQXmJR6AtEA47iuI6rWGWAqHRddZA&oe=659C930A",
+        "image_url": "https://scontent.fevn7-1.fna.fbcdn.net/v/t39.30808-6/333040046_3439834242958892_6701204803101473128_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=yEL_xTOvTzAAX9SVIq3&_nc_ht=scontent.fevn7-1.fna&oh=00_AfBaHgk3eiKqej3sJtM4QTcrxSYL7SmTSfo_KXuR0iFTkw&oe=65B0598A",
         "likes_count": 65,
         "comments_count": 43
     },
@@ -68,7 +68,7 @@ fun makeObject(): List<ImagesAndInfoEntity> {
         "comments_count": 98
     },
     {
-        "image_url": "https://scontent.fevn7-1.fna.fbcdn.net/v/t39.30808-6/333040046_3439834242958892_6701204803101473128_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=VM5bgunYteQAX_GLvKl&_nc_ht=scontent.fevn7-1.fna&oh=00_AfCRLYM8Pf4kcaJWdKQXmJR6AtEA47iuI6rWGWAqHRddZA&oe=659C930A",
+        "image_url": "https://scontent.fevn7-1.fna.fbcdn.net/v/t39.30808-6/333040046_3439834242958892_6701204803101473128_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=yEL_xTOvTzAAX9SVIq3&_nc_ht=scontent.fevn7-1.fna&oh=00_AfBaHgk3eiKqej3sJtM4QTcrxSYL7SmTSfo_KXuR0iFTkw&oe=65B0598A",
         "likes_count": 65,
         "comments_count": 43
     },
