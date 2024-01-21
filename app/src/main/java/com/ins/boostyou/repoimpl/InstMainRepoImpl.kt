@@ -4,29 +4,28 @@ import android.content.Context
 import android.util.Log
 import com.ins.boostyou.AppResult
 import com.ins.boostyou.api.RetrofitPostServiceApi
-import com.ins.boostyou.controller.FileDataUtils.Companion.getTokenFromLocal
-import com.ins.boostyou.controller.FileDataUtils.Companion.saveTokenIntoLocal
-import com.ins.boostyou.controller.FileDataUtils.Companion.saveUsNmAndId
+import com.ins.boostyou.controller.FileDataUtils
 import com.ins.boostyou.handleSuccess
-import com.ins.boostyou.model.request.InstAccessTokenRequestModel
 import com.ins.boostyou.model.response.EdgeOwnerToTimelineMedia
-import com.ins.boostyou.model.response.InstUserMediaJs
-import com.ins.boostyou.model.response.boostyou.RemotePackages
 import com.ins.boostyou.repository.InstMainRepo
 import com.ins.boostyou.model.response.InstPrData
 import com.ins.boostyou.model.response.UserData
 import com.ins.boostyou.model.response.UserMedia
 import com.ins.boostyou.model.response.UserMediaInfoList
+import com.ins.boostyou.utils.UserRegisterStatus
 
 class InstMainRepoImpl(
     private val api: RetrofitPostServiceApi,
     private val context: Context
 ) : InstMainRepo {
 
-    override suspend fun getPostDataFromNewJson(): AppResult<UserData> {
+    override suspend fun getPostDataFromNewJson(
+        userName: String,
+        saveUserName: Boolean?
+    ): AppResult<UserData> {
         return try {
             api.getPostDataFromNewJson(
-                userName = "aramsadoy",
+                userName = userName,
                 secFetchDest = "empty",
                 secFetchMode = "cors",
                 secFetchSite = "same-origin",
@@ -35,6 +34,14 @@ class InstMainRepoImpl(
                 requestedWith = "XMLHttpRequest"
             )?.let { response ->
                 val userData = parseToUserData(response)
+                if (saveUserName == true &&
+                    !userData.id.isNullOrBlank() &&
+                    !userData.userName.isNullOrBlank()
+                ) {
+                    val userRegisterStatus = createUserIfNotExist(userData.userName)
+                    Log.d("dwd", "userRegisterStatus = ${userRegisterStatus.name}")
+                    FileDataUtils.saveUsNmAndId(context, userData.id, userData.userName)
+                }
                 handleSuccess(userData)
             } ?: run {
                 Log.d("dwd", "getPostData Error response is null")
@@ -46,20 +53,44 @@ class InstMainRepoImpl(
         }
     }
 
+    private suspend fun createUserIfNotExist(userName: String): UserRegisterStatus {
+        return try {
+            val response = api.createUserIfNotExist(userName)
+            response?.let {
+                when (it.status) {
+                    "done" -> {
+                        UserRegisterStatus.USER_CREATED
+                    }
+                    "user_exist" -> UserRegisterStatus.USER_EXISTS
+                    else -> UserRegisterStatus.ERROR
+                }
+            } ?: run {
+                UserRegisterStatus.ERROR
+            }
+        } catch (e: Exception) {
+            Log.d("dwd", "createUserIfNotExist " + e.message)
+            UserRegisterStatus.ERROR
+        }
+    }
+
     private fun parseToUserData(response: InstPrData?): UserData {
         //contains User Media Info list
         val edgeOwnerToTimelineMedia = response?.data?.user?.edgeOwnerToTimelineMedia
         val userMedia = getUserMedia(edgeOwnerToTimelineMedia)
-        return UserData(
-            id = response?.data?.user?.id,
-            userName = response?.data?.user?.username,
-            fullName = response?.data?.user?.fullName,
-            profilePicUrl = response?.data?.user?.profilePicUrl,
-            profilePicUrlHd = response?.data?.user?.profilePicUrlHd,
-            followingCount = response?.data?.user?.edgeFollow?.count,
-            followedByCount = response?.data?.user?.edgeFollowedBy?.count,
-            userMedia = userMedia
-        )
+        response?.data?.user?.let { user ->
+            return UserData(
+                id = user.id,
+                userName = user.username,
+                fullName = user.fullName,
+                profilePicUrl = user.profilePicUrl,
+                profilePicUrlHd = user.profilePicUrlHd,
+                followingCount = user.edgeFollow.count,
+                followedByCount = user.edgeFollowedBy.count,
+                userMedia = userMedia
+            )
+        } ?: run {
+            return UserData()
+        }
     }
 
     private fun getUserMedia(edgeOwnerToTimelineMedia: EdgeOwnerToTimelineMedia?): UserMedia {
@@ -70,36 +101,26 @@ class InstMainRepoImpl(
                 //contains video info
                 //val videoUrl = node.videoUrl
                 //....
-                userMediaInfoList.add(UserMediaInfoList(
-                    id = node.id,
-                    displayUrl = node.displayUrl,
-                    thumbnailSrcUrl = node.thumbnailSrc,
-                    likeCount = node.edgeLikedBy.count,
-                    likeMediaPreviewCount = node.edgeMediaPreviewLike.count,
-                    commentCount = node.edgeMediaToComment.count,
-                    mediaPreview = node.mediaPreview,
-                    typeName = node.typename, // example - "GraphImage"
-                    thumbnailResources = node.thumbnailResources,
-                    isVideo = node.isVideo
-                ))
+                userMediaInfoList.add(
+                    UserMediaInfoList(
+                        id = node.id,
+                        displayUrl = node.displayUrl,
+                        thumbnailSrcUrl = node.thumbnailSrc,
+                        likeCount = node.edgeLikedBy.count,
+                        likeMediaPreviewCount = node.edgeMediaPreviewLike.count,
+                        commentCount = node.edgeMediaToComment.count,
+                        mediaPreview = node.mediaPreview,
+                        typeName = node.typename, // example - "GraphImage"
+                        thumbnailResources = node.thumbnailResources,
+                        isVideo = node.isVideo
+                    )
+                )
             }
         }
         return UserMedia(
             pageInfo = pageInfo,
-            userMediaInfoList = userMediaInfoList)
+            userMediaInfoList = userMediaInfoList
+        )
     }
 
-    override suspend fun requestRemotePackages(): AppResult<List<RemotePackages>> {
-        return try {
-            val response = api.requestRemotePackages()
-            if (response == null) {
-                AppResult.Error(Exception("empty data"))
-            } else {
-                handleSuccess(response)
-            }
-        } catch (e: Exception) {
-            Log.d("dwd", "getPostData Catch Error " + e.message)
-            AppResult.Error(e)
-        }
-    }
 }

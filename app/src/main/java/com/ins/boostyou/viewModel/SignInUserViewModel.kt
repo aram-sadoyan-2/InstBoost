@@ -20,7 +20,7 @@ class SignInUserViewModel(
 
     fun createUserIfNotExist(userName: String) {
         launchOnBackground {
-            _userRegistrationStatus.postValue(repo.createUserIfNotExist(userName))
+          //  _userRegistrationStatus.postValue(repo.createUserIfNotExist(userName))
         }
     }
 

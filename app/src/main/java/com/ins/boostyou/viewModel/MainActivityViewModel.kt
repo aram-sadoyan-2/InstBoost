@@ -24,15 +24,15 @@ class MainActivityViewModel(
 
     fun requestDataFromNewJson() {
         launchOnBackground {
-            _userPostData.postValue(repo.getPostDataFromNewJson())
+            _userPostData.postValue(repo.getPostDataFromNewJson("aramsadoy"))
         }
     }
 
-    fun requestRemotePackages() {
-        launchOnBackground {
-            _requestRemotePackages.postValue(repo.requestRemotePackages())
-        }
-    }
+//    fun requestRemotePackages() {
+//        launchOnBackground {
+//            _requestRemotePackages.postValue(repo.requestRemotePackages())
+//        }
+//    }
 
     private fun <T> MutableLiveData<T>.setValueSafe(value: T?) =
         if (Looper.getMainLooper() == Looper.myLooper()) this.value = value else postValue(value)
