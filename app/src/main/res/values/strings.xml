@@ -1,9 +1,6 @@
 <resources>
     <string name="app_name">Inst Boost</string>
 
-    <string name="facebook_app_id" translatable="false">215290438208114</string>
-
-
     <string name="client_id" translatable="false">705882251747367</string>
     <string name="client_secret" translatable="false">b6f9fb05ad0ae5ad6e20a96dd521a619</string>
     <!--<string name="redirect_url" translatable="false">https://instagram.com/</string>-->
