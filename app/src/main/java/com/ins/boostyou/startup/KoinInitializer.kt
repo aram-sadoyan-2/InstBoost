@@ -15,10 +15,11 @@ class KoinInitializer : Initializer<KoinApplication> {
             androidContext(context)
             modules(
                 listOf(
+                    instModule,
                     coroutineModule,
                     networkModule(context),
                    // instBillingModule,
-                    instModule,
+
                 )
             )
         }

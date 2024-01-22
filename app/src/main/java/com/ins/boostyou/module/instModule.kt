@@ -13,11 +13,15 @@ import com.ins.boostyou.repository.InAppPaymentValidationRepo
 import com.ins.boostyou.repository.SignInUserRepo
 import com.ins.boostyou.viewModel.InAppPurchaseViewModel
 import com.ins.boostyou.viewModel.SignInUserViewModel
+import kotlinx.coroutines.Dispatchers
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 
 val instModule = module {
+    factory<InAppPaymentValidationRepo> {
+        InAppPaymentValidationRepoImpl(ioDispatcher = Dispatchers.IO, get())
+    }
     factory<InstBoostPaymentService> {
         GoogleBillingServiceImpl(get(), get())
     }
@@ -29,11 +33,7 @@ val instModule = module {
         SignInUserRepoImpl(get(), get())
     }
 
-    factory<InAppPaymentValidationRepo> {
-        InAppPaymentValidationRepoImpl(get(), get())
-    }
-
-    single<RemoteSettingsService> { RemoteSettingsServiceImpl(get()) }
+    factory<RemoteSettingsService> { RemoteSettingsServiceImpl(get()) }
 
 
     viewModel {
