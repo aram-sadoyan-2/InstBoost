@@ -69,7 +69,7 @@ class TestActivity: ComponentActivity() {
     }
 
     private fun requestPackages() {
-        mainActivityViewModel.requestRemotePackages()
+        //mainActivityViewModel.requestRemotePackages()
         mainActivityViewModel.requestRemotePackages.observe(this) {
             it?.let {
                 when (it) {

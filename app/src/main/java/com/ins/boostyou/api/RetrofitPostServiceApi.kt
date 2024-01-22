@@ -78,4 +78,10 @@ interface RetrofitPostServiceApi {
         @Field("action") action: String? = "getUserInfo",
     ): UserInfo?
 
+
+
+
+    @POST("validationRequestEndpoint")
+    suspend fun validate(@Body requestBody: HashMap<String, String>): BaseResponse?
+
 }

@@ -3,7 +3,6 @@ package com.ins.boostyou.startup
 import android.content.Context
 import androidx.startup.Initializer
 import com.ins.boostyou.module.coroutineModule
-import com.ins.boostyou.module.instBillingModule
 import com.ins.boostyou.module.instModule
 import com.ins.boostyou.module.networkModule
 import org.koin.android.ext.koin.androidContext
@@ -18,7 +17,7 @@ class KoinInitializer : Initializer<KoinApplication> {
                 listOf(
                     coroutineModule,
                     networkModule(context),
-                    instBillingModule,
+                   // instBillingModule,
                     instModule,
                 )
             )
