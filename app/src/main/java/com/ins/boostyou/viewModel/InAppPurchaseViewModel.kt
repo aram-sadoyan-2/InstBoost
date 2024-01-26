@@ -41,7 +41,7 @@ class InAppPurchaseViewModel(
     fun validateInAppPurchase(requestBody: InAppValidateRequestBody) = launchOnUI {
         inAppPaymentValidationRepo.validateInAppPayment(requestBody).collect {
             if (it.purchaseStatus == PurchaseStatus.Success) {
-              //  oneTimePaymentValidationUseCase.consumePackage(it.token) //todo
+                instBoostPaymentService.consumePackage(it.token)
             }
             _inAppPurchaseLiveData.value =
                 InAppPurchaseResponse(

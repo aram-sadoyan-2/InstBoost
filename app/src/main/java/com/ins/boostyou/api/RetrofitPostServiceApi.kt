@@ -78,6 +78,30 @@ interface RetrofitPostServiceApi {
         @Field("action") action: String? = "getUserInfo",
     ): UserInfo?
 
+    @FormUrlEncoded
+    @POST("/api.php")
+    suspend fun getLikePriceList(
+        @Field("action") action: String? = "getLikePriceList",
+    ): Any?
+
+    @FormUrlEncoded
+    @POST("/api.php")
+    suspend fun getFollowerPriceList(
+        @Field("action") action: String? = "getFollowerPriceList",
+    ): Any?
+
+    @FormUrlEncoded
+    @POST("/api.php")
+    suspend fun requestBoostTask(
+        @Field("user_name") userName: String,
+        @Field("task_typ") taskType: String,
+        @Field("type") type: String,
+        @Field("count") count: Int,
+        @Field("price") price: Double,
+        @Field("service_url") serviceUrl: String,
+        @Field("action") action: String? = "boostyouRequest",
+    ): Any?
+
 
 
 

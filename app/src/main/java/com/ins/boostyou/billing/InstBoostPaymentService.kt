@@ -12,4 +12,6 @@ interface InstBoostPaymentService {
 
     suspend fun getPackageDetail(packageId: String): PackageDetails
 
+    suspend fun consumePackage(token: String)
+
 }
