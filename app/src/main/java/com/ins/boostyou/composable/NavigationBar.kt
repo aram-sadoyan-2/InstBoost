@@ -34,10 +34,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ins.boostyou.ui.theme.InstBoostTheme
+import com.ins.boostyou.viewModel.InAppPurchaseViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationBar() {
+fun NavigationBar(inAppPurchaseViewModel: InAppPurchaseViewModel) {
     // setting up the individual tabs
     val homeTab = TabBarItem(
         title = "Home",
@@ -86,7 +87,7 @@ fun NavigationBar() {
                         Text(settingsTab.title)
                     }
                     composable(moreTab.title) {
-                        MoreView()
+                        MorePage(inAppPurchaseViewModel)
                     }
                 }
             }

@@ -7,10 +7,12 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
+import com.android.billingclient.api.consumePurchase
 import com.android.billingclient.api.queryProductDetails
 import com.ins.boostyou.billing.domain.InAppPurchaseState
 import com.ins.boostyou.billing.domain.PackageDetails
@@ -156,4 +158,9 @@ class GoogleBillingServiceImpl(
     private fun getInAppPackagePricingPhase(productDetails: ProductDetails): ProductDetails.OneTimePurchaseOfferDetails? =
         productDetails.oneTimePurchaseOfferDetails
 
+    override suspend fun consumePackage(token: String) {
+        if (token.isNotEmpty()) {
+            billingClient?.consumePurchase(ConsumeParams.newBuilder().setPurchaseToken(token).build())
+        }
+    }
 }
