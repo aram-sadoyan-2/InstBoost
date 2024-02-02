@@ -11,6 +11,7 @@ import com.ins.boostyou.repoimpl.InstMainRepoImpl
 import com.ins.boostyou.repoimpl.SignInUserRepoImpl
 import com.ins.boostyou.repository.InAppPaymentValidationRepo
 import com.ins.boostyou.repository.SignInUserRepo
+import com.ins.boostyou.viewModel.ComposeNavigationViewModel
 import com.ins.boostyou.viewModel.InAppPurchaseViewModel
 import com.ins.boostyou.viewModel.SignInUserViewModel
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +47,10 @@ val instModule = module {
 
     viewModel {
         InAppPurchaseViewModel(instBoostPaymentService = get(), get(), get())
+    }
+
+    viewModel {
+        ComposeNavigationViewModel(get())
     }
 
 

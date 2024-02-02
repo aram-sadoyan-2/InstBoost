@@ -19,7 +19,7 @@ fun MorePage(inAppPurchaseViewModel: InAppPurchaseViewModel) {
             .background(Color.White)
     ) {
         Button(onClick = {
-            inAppPurchaseViewModel.launchInAppBillingFlow(activity,"coin_10")
+            inAppPurchaseViewModel.launchInAppBillingFlow(activity,"com.boost.coin30")
         }) {
 
         }

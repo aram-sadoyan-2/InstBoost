@@ -65,13 +65,13 @@ class GoogleBillingServiceImpl(
         coroutineScope.launch {
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 // The BillingClient is ready. You can query purchases here.
-                remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
+              // remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
+                remotePackages = mutableListOf(RemotePackages(packageId = "com.boost.coin30"))
                 refreshDetails()
                // getProductsInfo(remoteSettings.getRemoteSettings())
                 //todo if packageIds exists
                 //todo query qurchase
                 //todo else call again to back-end
-                Log.d("dwd", "GoogleBillingServiceImpl onBillingSetupFinished ")
             }
         }
     }
@@ -84,9 +84,11 @@ class GoogleBillingServiceImpl(
         val productDetails = inAppDetailsResponse.productDetails.find { it.productId == sku }
         if (productDetails == null || !billingClient?.isReady.orFalse()) {
             inAppPurchaseDoneFlow.value = InAppPurchaseState.Failure
+            Log.d("dwd", "launchInAppBillingFlow eturn 87")
             return inAppPurchaseDoneFlow
         }
         //inAppPendingItems.add(productDetails.productId)
+        Log.d("dwd", "launchInAppBillingFlow 91 $sku")
         val flowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(
             listOf(
                 BillingFlowParams.ProductDetailsParams.newBuilder()
@@ -99,7 +101,7 @@ class GoogleBillingServiceImpl(
 
     override suspend fun getPackageDetail(packageId: String): PackageDetails {
         refreshDetails()
-        return mapProductDetails(inAppDetailsResponse).get(packageId) ?: PackageDetails.default()
+        return mapProductDetails(inAppDetailsResponse)[packageId] ?: PackageDetails.default()
     }
 
     private suspend fun refreshDetails(){
@@ -128,7 +130,7 @@ class GoogleBillingServiceImpl(
     }
 
 
-    fun mapProductDetails(
+    private fun mapProductDetails(
         packageDetailsResponse: PackageDetailsResponse
     ): Map<String, PackageDetails> = when {
         packageDetailsResponse.packageDetailsStatus == PackageDetailsStatus.Error && packageDetailsResponse.productDetails.isEmpty() -> {
