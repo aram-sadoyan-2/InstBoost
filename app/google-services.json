@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "582870859847",
+    "project_id": "boostyou-178be",
+    "storage_bucket": "boostyou-178be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582870859847:android:9099072d7fdf9e9e383162",
+        "android_client_info": {
+          "package_name": "com.ins.boostyou"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsI5bDEOFU75iKFlGuQulBRFcQGl1L5Hs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

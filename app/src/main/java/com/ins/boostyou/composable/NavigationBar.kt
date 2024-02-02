@@ -3,6 +3,7 @@ package com.ins.boostyou.composable
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -33,12 +34,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.ins.boostyou.ui.theme.InstBoostTheme
+import com.ins.boostyou.viewModel.ComposeNavigationViewModel
 import com.ins.boostyou.viewModel.InAppPurchaseViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationBar(inAppPurchaseViewModel: InAppPurchaseViewModel) {
+fun NavigationBar(
+    inAppPurchaseViewModel: InAppPurchaseViewModel,
+    composeNavigationViewModel: ComposeNavigationViewModel
+) {
     // setting up the individual tabs
     val homeTab = TabBarItem(
         title = "Home",
@@ -68,7 +72,7 @@ fun NavigationBar(inAppPurchaseViewModel: InAppPurchaseViewModel) {
     // creating our navController
     val navController = rememberNavController()
 
-    InstBoostTheme {
+   // InstBoostTheme {
         // A surface container using the 'background' color from the theme
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -81,7 +85,8 @@ fun NavigationBar(inAppPurchaseViewModel: InAppPurchaseViewModel) {
                         FistPage()
                     }
                     composable(alertsTab.title) {
-                        Text(alertsTab.title)
+                        //Text(alertsTab.title)
+                        FistPage()
                     }
                     composable(settingsTab.title) {
                         Text(settingsTab.title)
@@ -92,7 +97,7 @@ fun NavigationBar(inAppPurchaseViewModel: InAppPurchaseViewModel) {
                 }
             }
         }
-    }
+   // }
 }
 
 @Composable
@@ -107,7 +112,8 @@ fun TabView(tabBarItems: List<TabBarItem>, navController: NavController) {
                 selected = selectedTabIndex == index,
                 onClick = {
                     selectedTabIndex = index
-                    navController.navigate(tabBarItem.title)
+                    Log.d("dwd","selectedTab indx= $index")
+                    //navController.navigate(tabBarItem.title) //todo removed
                 },
                 icon = {
                     TabBarIconView(
