@@ -8,8 +8,8 @@ data class UserData(
     val profilePicUrlHd: String? = "",
     val followingCount: Long? = 0,
     val followedByCount: Long? = 0,
-
-    val userMedia: UserMedia? = null
+    val userMedia: UserMedia? = null,
+    val userState: UserState = UserState.DOES_NOT_EXIST,
 )
 
 data class UserMedia(
@@ -29,3 +29,8 @@ data class UserMediaInfoList(
     val thumbnailResources: List<ThumbnailResource>? = null,
     val isVideo: Boolean? = false
 )
+
+enum class UserState {
+    SIGNED_IN,
+    DOES_NOT_EXIST
+}

@@ -18,10 +18,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.ins.boostyou.viewModel.ComposeNavigationViewModel
+import com.ins.boostyou.viewModel.MainActivityViewModel
 
 @Preview
 @Composable
-fun UserInfoSection() {
+fun UserInfoSection(
+    composeNavigationViewModel: ComposeNavigationViewModel,
+    mainActivityViewModel: MainActivityViewModel
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,7 +39,7 @@ fun UserInfoSection() {
             modifier = Modifier.padding(start = 12.dp, top = 12.dp, bottom = 12.dp)
         ) {
             AsyncImage(
-                model = "https://scontent.fevn7-1.fna.fbcdn.net/v/t39.30808-6/333040046_3439834242958892_6701204803101473128_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=yEL_xTOvTzAAX9SVIq3&_nc_ht=scontent.fevn7-1.fna&oh=00_AfBaHgk3eiKqej3sJtM4QTcrxSYL7SmTSfo_KXuR0iFTkw&oe=65B0598A",
+                model = mainActivityViewModel.userData.profilePicUrl,
                 contentDescription = "image description",
                 modifier = Modifier.size(72.dp),
                 contentScale = ContentScale.Crop
@@ -46,22 +51,34 @@ fun UserInfoSection() {
                 .fillMaxWidth()
                 .padding(end = 12.dp, start = 32.dp)
         ) {
-            FollowersCount("posts", "1230", modifier = Modifier.weight(1f))
-            FollowersCount("followers", "930", modifier = Modifier.weight(1f))
-            FollowersCount("followings", "130", modifier = Modifier.weight(1f))
+            FollowersCount(
+                "posts",
+                mainActivityViewModel.userData.userMedia?.userMediaInfoList?.size?.toLong(),
+                modifier = Modifier.weight(1f)
+            )
+            FollowersCount(
+                "followers",
+                mainActivityViewModel.userData.followedByCount,
+                modifier = Modifier.weight(1f)
+            )
+            FollowersCount(
+                "following",
+                mainActivityViewModel.userData.followingCount,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
 
 @Composable
-private fun FollowersCount(bottomText: String, topText: String, modifier: Modifier) {
+private fun FollowersCount(bottomText: String, topText: Long?, modifier: Modifier) {
     Column(
         modifier = Modifier
             .padding(12.dp)
             .then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = topText)
+        Text(text = topText.toString())
         Text(text = bottomText)
     }
 }

@@ -66,7 +66,7 @@ class GoogleBillingServiceImpl(
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 // The BillingClient is ready. You can query purchases here.
               // remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
-                remotePackages = mutableListOf(RemotePackages(packageId = "com.boost.coin30"))
+                remotePackages = mutableListOf(RemotePackages(packageId = "android.test.purchased"))
                 refreshDetails()
                // getProductsInfo(remoteSettings.getRemoteSettings())
                 //todo if packageIds exists

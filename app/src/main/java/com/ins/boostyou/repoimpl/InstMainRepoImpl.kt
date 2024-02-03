@@ -12,6 +12,7 @@ import com.ins.boostyou.model.response.InstPrData
 import com.ins.boostyou.model.response.UserData
 import com.ins.boostyou.model.response.UserMedia
 import com.ins.boostyou.model.response.UserMediaInfoList
+import com.ins.boostyou.model.response.UserState
 import com.ins.boostyou.utils.UserRegisterStatus
 
 class InstMainRepoImpl(
@@ -20,12 +21,16 @@ class InstMainRepoImpl(
 ) : InstMainRepo {
 
     override suspend fun getPostDataFromNewJson(
-        userName: String,
+        userName: String?,
         saveUserName: Boolean?
     ): AppResult<UserData> {
         return try {
+            val usrNme = userName ?: getUserNameFromPref()
+            if (usrNme.isEmpty()){
+                AppResult.Error(Exception("userName does not exists"))
+            }
             api.getPostDataFromNewJson(
-                userName = userName,
+                userName = usrNme,
                 secFetchDest = "empty",
                 secFetchMode = "cors",
                 secFetchSite = "same-origin",
@@ -51,6 +56,14 @@ class InstMainRepoImpl(
             Log.d("dwd", "getPostData Catch Error " + e.message)
             AppResult.Error(e)
         }
+    }
+
+    override fun logOutUser() {
+        FileDataUtils.logoutUserFromLocal(context)
+    }
+
+    private fun getUserNameFromPref(): String {
+        return FileDataUtils.getUsNameFromLocal(context)
     }
 
     private suspend fun createUserIfNotExist(userName: String): UserRegisterStatus {
@@ -86,7 +99,8 @@ class InstMainRepoImpl(
                 profilePicUrlHd = user.profilePicUrlHd,
                 followingCount = user.edgeFollow.count,
                 followedByCount = user.edgeFollowedBy.count,
-                userMedia = userMedia
+                userMedia = userMedia,
+                userState = UserState.SIGNED_IN
             )
         } ?: run {
             return UserData()
@@ -122,5 +136,7 @@ class InstMainRepoImpl(
             userMediaInfoList = userMediaInfoList
         )
     }
+
+
 
 }

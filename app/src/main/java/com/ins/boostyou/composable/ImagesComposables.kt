@@ -28,73 +28,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.ins.boostyou.R
-import com.ins.boostyou.model.response.ImagesAndInfoEntity
+import com.ins.boostyou.model.response.UserMediaInfoList
+import com.ins.boostyou.viewModel.MainActivityViewModel
 
 @Preview
 @Composable
-fun ImagesContainer() {
-    val listOfItems = makeObject()
+fun ImagesContainer(mainActivityViewModel: MainActivityViewModel) {
     LazyRow {
-        items(listOfItems) { item ->
-            SingleImage(item)
+        mainActivityViewModel.userData.userMedia?.userMediaInfoList?.let {
+            items(it) { item ->
+                SingleImage(item)
+            }
         }
     }
 }
 
-fun makeObject(): List<ImagesAndInfoEntity> {
-    val data = """
-        [
-    {
-        "image_url": "https://scontent.fevn7-1.fna.fbcdn.net/v/t39.30808-6/333040046_3439834242958892_6701204803101473128_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=yEL_xTOvTzAAX9SVIq3&_nc_ht=scontent.fevn7-1.fna&oh=00_AfBaHgk3eiKqej3sJtM4QTcrxSYL7SmTSfo_KXuR0iFTkw&oe=65B0598A",
-        "likes_count": 65,
-        "comments_count": 43
-    },
-    {
-        "image_url": "https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-        "likes_count": 21,
-        "comments_count": 98
-    },
-    {
-        "image_url": "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D",
-        "likes_count": 91,
-        "comments_count": 11
-    },
-    {
-        "image_url": "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-        "likes_count": 21,
-        "comments_count": 98
-    },
-    {
-        "image_url": "https://scontent.fevn7-1.fna.fbcdn.net/v/t39.30808-6/333040046_3439834242958892_6701204803101473128_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=yEL_xTOvTzAAX9SVIq3&_nc_ht=scontent.fevn7-1.fna&oh=00_AfBaHgk3eiKqej3sJtM4QTcrxSYL7SmTSfo_KXuR0iFTkw&oe=65B0598A",
-        "likes_count": 65,
-        "comments_count": 43
-    },
-    {
-        "image_url": "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D",
-        "likes_count": 91,
-        "comments_count": 11
-    }
-]
-    """
-
-    val gson = Gson()
-    val itemType = object : TypeToken<List<ImagesAndInfoEntity>>() {}.type
-    return gson.fromJson(data, itemType)
-}
-
-
 @Composable
-fun SingleImage(item: ImagesAndInfoEntity) {
+fun SingleImage(item: UserMediaInfoList) {
     Card(
         modifier = cardViewModifier,
         shape = RoundedCornerShape(24.dp),
         colors = cardColors(containerColor = Color.White)
     ) {
         AsyncImage(
-            model = item.imageUrl,
+            model = item.displayUrl,
             contentDescription = "",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -103,8 +61,8 @@ fun SingleImage(item: ImagesAndInfoEntity) {
                 .height(125.dp)
         )
         Row {
-            LikeCountComposable(item.likesCount.toString(), R.drawable.heart)
-            LikeCountComposable(item.commentsCount.toString(), R.drawable.comment)
+            LikeCountComposable(item.likeCount.toString(), R.drawable.heart)
+            LikeCountComposable(item.commentCount.toString(), R.drawable.comment)
         }
     }
 }

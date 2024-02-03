@@ -1,8 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services") version "4.4.0" apply false
-    id("com.google.firebase.crashlytics") version "2.9.9" apply false
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -17,8 +17,8 @@ android {
         applicationId = "com.ins.boostyou"
         minSdk = 24
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.1"
+        versionCode = 7
+        versionName = "1.1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -52,6 +52,12 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+
+    bundle {
+        language {
+            enableSplit = false
         }
     }
 }
@@ -106,6 +112,6 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-analytics")
-    implementation ("com.google.firebase:firebase-crashlytics")
+    //implementation ("com.google.firebase:firebase-crashlytics")
 }
 

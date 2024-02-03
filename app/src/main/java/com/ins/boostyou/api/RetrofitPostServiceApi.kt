@@ -14,7 +14,6 @@ interface RetrofitPostServiceApi {
     @GET("https://www.instagram.com/api/v1/users/web_profile_info/")
     suspend fun getPostDataFromNewJson(
         @Query("username") userName: String,
-        // @Query("fbclid") fbclId: String,
         @Header("sec-fetch-dest") secFetchDest: String,
         @Header("sec-fetch-mode") secFetchMode: String,
         @Header("sec-fetch-site") secFetchSite: String,

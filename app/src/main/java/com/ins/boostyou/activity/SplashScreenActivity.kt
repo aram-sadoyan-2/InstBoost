@@ -3,11 +3,8 @@ package com.ins.boostyou.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.startup.AppInitializer
 import com.ins.boostyou.TestActivity
 import com.ins.boostyou.controller.FileDataUtils
-import com.ins.boostyou.startup.KoinInitializer
-
 
 class SplashScreenActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
