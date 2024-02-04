@@ -14,7 +14,7 @@ data class UserData(
 
 data class UserMedia(
     val pageInfo: PageInfo2? = null,
-    val userMediaInfoList: List<UserMediaInfoList>? = emptyList()
+    val userMediaInfoList: List<UserMediaInfoList?>? = emptyList()
 )
 
 data class UserMediaInfoList(

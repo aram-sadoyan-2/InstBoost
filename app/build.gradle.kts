@@ -110,8 +110,9 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("androidx.startup:startup-runtime:1.1.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
-    implementation("com.google.firebase:firebase-analytics")
+//    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+//    implementation("com.google.firebase:firebase-analytics")
     //implementation ("com.google.firebase:firebase-crashlytics")
+    implementation("com.airbnb.android:lottie-compose:6.3.0")
 }
 

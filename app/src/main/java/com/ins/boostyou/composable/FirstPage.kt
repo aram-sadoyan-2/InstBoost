@@ -2,6 +2,7 @@ package com.ins.boostyou.composable
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -24,16 +25,16 @@ fun FistPage(
     inAppPurchaseViewModel: InAppPurchaseViewModel
 ) {
     when (composeNavigationViewModel.selectedTabItem) {
-        0,1,2 -> {
+        0, 1, 2 -> {
             //val scroll = rememberScrollState()
             Column(
                 Modifier
                     .background(Color.White)
             ) {
-                if (mainActivityViewModel.userData.userState == UserState.SIGNED_IN){
+                if (mainActivityViewModel.userData.userState == UserState.SIGNED_IN) {
                     UserInfoSection(composeNavigationViewModel, mainActivityViewModel)
                 } else {
-                    Log.d("dwd","Logout state")
+                    Log.d("dwd", "Logout state")
                     UserNameInputSection()
                 }
                 Divider(thickness = 1.dp, color = Color(0xFFD9DDE1))
@@ -41,16 +42,16 @@ fun FistPage(
                 ImagesContainer(mainActivityViewModel)
                 Spacer(modifier = Modifier.height(20.dp))
                 Divider(thickness = 1.dp, color = Color(0xFFD9DDE1))
-                when(composeNavigationViewModel.selectedTabItem){
-                    0-> LikesSection()
-                    1-> FollowersSection()
-                    2-> CommentsSection()
+                when (composeNavigationViewModel.selectedTabItem) {
+                    0 -> LikesSection()
+                    1 -> FollowersSection()
+                    2 -> CommentsSection()
                 }
             }
         }
 
         3 -> {
-            Log.d("dwd","KHJBHN 3")
+            Log.d("dwd", "KHJBHN 3")
             MorePage(inAppPurchaseViewModel, mainActivityViewModel)
         }
     }
