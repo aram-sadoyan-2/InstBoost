@@ -1,10 +1,12 @@
 package com.ins.boostyou.model.response.boostyou
 
 import com.google.gson.annotations.SerializedName
+import com.ins.boostyou.model.response.BaseResponse
 
 data class UserInfo(
-    val userName: String? = "",
-    val coinsCount: Int? = -1,
+    @SerializedName("deviceId") val deviceId: String? = "",
+    @SerializedName("userName") val userName: String? = "",
+    @SerializedName("coinsCount") val coinsCount: Int? = -1,
     @SerializedName("Id") val id: Int? = -1,
-    val lastUpdate: String? = "",
-)
+    @SerializedName("lastUpdate") val lastUpdate: String? = "",
+):BaseResponse()

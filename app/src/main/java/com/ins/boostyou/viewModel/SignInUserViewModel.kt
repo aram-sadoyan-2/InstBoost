@@ -19,7 +19,7 @@ class SignInUserViewModel(
     val userInfo = _userInfo
 
     init {
-        createUserIfNotExist()
+       // createUserIfNotExist()
     }
 
     private fun createUserIfNotExist() {

@@ -19,6 +19,7 @@ import com.ins.boostyou.billing.domain.PackageDetails
 import com.ins.boostyou.billing.domain.PackageDetailsResponse
 import com.ins.boostyou.billing.domain.PackageDetailsStatus
 import com.ins.boostyou.billing.domain.PackageProcessStatus
+import com.ins.boostyou.model.response.boostyou.RemotePackageItem
 import com.ins.boostyou.model.response.boostyou.RemotePackages
 import com.ins.boostyou.repository.SignInUserRepo
 import com.ins.boostyou.utils.orFalse
@@ -41,7 +42,7 @@ class GoogleBillingServiceImpl(
     private var inAppDetailsResponse = PackageDetailsResponse()
     private val inAppPurchaseDoneFlow =
         MutableStateFlow<InAppPurchaseState>(InAppPurchaseState.Initial)
-    private var remotePackages: MutableList<RemotePackages>? = null
+    private var remotePackages: MutableList<RemotePackageItem>? = null
 
 
     override fun initialize() {
@@ -68,7 +69,8 @@ class GoogleBillingServiceImpl(
                 // The BillingClient is ready. You can query purchases here.
                val userStatus = signInUserRepo.createUserIfNotExist()
                 Log.d("dwd","USER_STATUS $userStatus")
-               remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
+              // remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
+                remotePackages = mutableListOf(RemotePackageItem(packageId = "android.test.purchased"))
                 refreshDetails()
                // getProductsInfo(remoteSettings.getRemoteSettings())
                 //todo if packageIds exists
