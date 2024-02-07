@@ -32,7 +32,7 @@ class MainActivityViewModel(
         viewModelScope.launch {
             loadingState = LoadingState.LOADING
           //  requestUserInfo()
-           // requestDataFromNewJson("aramsadoy")
+            requestDataFromNewJson("aramsadoy")
             loadingState = null
         }
     }
