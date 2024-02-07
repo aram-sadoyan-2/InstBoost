@@ -32,14 +32,14 @@ class MainActivityViewModel(
         viewModelScope.launch {
             loadingState = LoadingState.LOADING
           //  requestUserInfo()
-           // requestDataFromNewJson("aramsadoy")
+            requestDataFromNewJson("aramsadoy")
             loadingState = null
         }
     }
 
-    private suspend fun requestUserInfo(userName: String? = "aramsadoy") {
+    private suspend fun requestUserInfo() {
         //launchOnBackground {
-            signInUserRepo.getUserInfo(userName).apply {
+            signInUserRepo.getUserInfo().apply {
                 when (this) {
                     is AppResult.Success -> {
                         Log.d("dwd", "requestUserInfo ---- " + successData)
