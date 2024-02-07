@@ -41,9 +41,11 @@ fun FistPage(
                             UserNameInputSection()
                         }
                         Divider(thickness = 1.dp, color = Color(0xFFD9DDE1))
-                        Spacer(modifier = Modifier.height(16.dp))
-                        ImagesContainer(mainActivityViewModel)
-                        Spacer(modifier = Modifier.height(20.dp))
+                        if (composeNavigationViewModel.selectedTabItem == 1) {
+                            SelectedFollowersSection(mainActivityViewModel = mainActivityViewModel)
+                        } else {
+                            ImagesContainer(mainActivityViewModel = mainActivityViewModel)
+                        }
                         Divider(thickness = 1.dp, color = Color(0xFFD9DDE1))
                         when (composeNavigationViewModel.selectedTabItem) {
                             0 -> TabScreenPrice(mainActivityViewModel)
