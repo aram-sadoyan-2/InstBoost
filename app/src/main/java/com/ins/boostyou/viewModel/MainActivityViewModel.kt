@@ -23,7 +23,7 @@ class MainActivityViewModel(
         requestDataFromNewJson()
     }
 
-    private fun requestDataFromNewJson(userName: String? = "aramsadoy") {
+    private fun requestDataFromNewJson(userName: String? = "vrdrobe.app") {
         launchOnBackground {
             repo.getPostDataFromNewJson(userName).apply {
                 when (this) {

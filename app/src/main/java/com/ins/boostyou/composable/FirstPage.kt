@@ -17,7 +17,6 @@ import com.ins.boostyou.viewModel.ComposeNavigationViewModel
 import com.ins.boostyou.viewModel.InAppPurchaseViewModel
 import com.ins.boostyou.viewModel.MainActivityViewModel
 
-@Preview
 @Composable
 fun FistPage(
     composeNavigationViewModel: ComposeNavigationViewModel,
@@ -32,15 +31,20 @@ fun FistPage(
                     .background(Color.White)
             ) {
                 if (mainActivityViewModel.userData.userState == UserState.SIGNED_IN) {
-                    UserInfoSection(composeNavigationViewModel, mainActivityViewModel)
+                    UserInfoSection(
+                        composeNavigationViewModel = composeNavigationViewModel,
+                        mainActivityViewModel = mainActivityViewModel,
+                    )
                 } else {
                     Log.d("dwd", "Logout state")
                     UserNameInputSection()
                 }
                 Divider(thickness = 1.dp, color = Color(0xFFD9DDE1))
-                Spacer(modifier = Modifier.height(16.dp))
-                ImagesContainer(mainActivityViewModel)
-                Spacer(modifier = Modifier.height(20.dp))
+                if (composeNavigationViewModel.selectedTabItem == 1) {
+                    SelectedFollowersSection(mainActivityViewModel = mainActivityViewModel)
+                } else {
+                    ImagesContainer(mainActivityViewModel = mainActivityViewModel)
+                }
                 Divider(thickness = 1.dp, color = Color(0xFFD9DDE1))
                 when (composeNavigationViewModel.selectedTabItem) {
                     0 -> LikesSection()

@@ -6,9 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -39,6 +41,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -46,6 +50,7 @@ import com.airbnb.lottie.LottieDrawable
 import com.airbnb.lottie.LottieDrawable.INFINITE
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieAnimatable
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ins.boostyou.R
@@ -55,19 +60,20 @@ import kotlinx.coroutines.coroutineScope
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ImagesContainer(mainActivityViewModel: MainActivityViewModel) {
+fun ImagesContainer(
+    mainActivityViewModel: MainActivityViewModel,
+) {
     mainActivityViewModel.userData.userMedia?.userMediaInfoList?.let { userMediaInfo ->
         val newList = userMediaInfo.toMutableList()
         val pagerState = rememberPagerState { newList.size }
+        val firstItem = remember { derivedStateOf { pagerState.currentPage } }
         newList.add(0, null)
         newList.add(newList.lastIndex + 1, null)
 
-        val firstItem =
-            remember { derivedStateOf { pagerState.currentPage } }
         HorizontalPager(
             state = pagerState,
             pageSize = PageSize.Fixed(156.dp),
-            contentPadding = PaddingValues(start = 64.dp , end = 16.dp, top = 16.dp , bottom = 16.dp)
+            contentPadding = PaddingValues(start = 64.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
         ) {
             SingleImage(item = newList[it], firstItem.value, it)
         }
@@ -76,25 +82,39 @@ fun ImagesContainer(mainActivityViewModel: MainActivityViewModel) {
 
 
 @Composable
-fun SingleImage(item: UserMediaInfoList?, scale: Int, i: Int) {
+fun SingleImage(item: UserMediaInfoList?, firstItem: Int, index: Int) {
     if (item == null) {
-        Card(
-            modifier = Modifier.height(160.dp),
-            colors = cardColors(containerColor = Color.White)
+        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.swipe_animation))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(end = 4.dp)
+                .fillMaxWidth(1f)
         ) {
-            Loader()
-            AsyncImage(
-                model = item?.displayUrl,
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .padding(bottom = 8.dp)
-                    .height(160.dp)
-            )
+            if (firstItem == 0) {
+                Text(
+                    text = "Swipe to Select Post",
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = TextUnit(14f, TextUnitType.Sp)
+                    )
+                )
+                LottieAnimation(
+                    composition = composition,
+                    speed = 2.5f,
+                    iterations = LottieConstants.IterateForever,
+                    modifier = Modifier
+                        .height(170.dp)
+                        .padding(horizontal = 32.dp)
+                        .padding(bottom = 32.dp)
+                )
+            }
         }
     } else {
         Card(
-            modifier = if (scale == i) selectedCardView else cardViewModifier,
+            modifier = if (firstItem == index) selectedCardView else cardViewModifier,
             shape = RoundedCornerShape(24.dp),
             colors = cardColors(containerColor = Color.White)
         ) {
@@ -104,7 +124,7 @@ fun SingleImage(item: UserMediaInfoList?, scale: Int, i: Int) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .padding(bottom = 8.dp)
-                    .height(if (scale == i) 145.dp else 110.dp)
+                    .height(if (firstItem == index) 145.dp else 110.dp)
             )
             Row {
                 LikeCountComposable(item.likeCount.toString(), R.drawable.heart)
@@ -133,11 +153,6 @@ fun LikeCountComposable(count: String, icon: Int) {
     }
 }
 
-@Composable
-fun Loader() {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.swipe_animation))
-    LottieAnimation(composition, reverseOnRepeat = true)
-}
 
 val cardViewModifier = Modifier
     .padding(4.dp)
@@ -160,12 +175,12 @@ val selectedCardView = Modifier
     .padding(end = 4.dp)
     .border(
         width = 1.dp,
-        color = Color.Red,
+        color = Color(0xFFF05161),
         shape = RoundedCornerShape(24.dp),
     )
     .shadow(
         elevation = 8.dp,
-        spotColor = Color.Red,
-        ambientColor = Color.Red,
+        spotColor = Color(0xFFF05161),
+        ambientColor = Color(0xFFF05161),
         shape = RoundedCornerShape(24.dp)
     )
