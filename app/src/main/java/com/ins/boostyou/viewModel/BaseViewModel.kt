@@ -1,7 +1,11 @@
 package com.ins.boostyou.viewModel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ins.boostyou.constants.enum.LoadingState
 import com.ins.boostyou.module.ProfDispatchers
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
@@ -10,6 +14,9 @@ import kotlinx.coroutines.flow.flowOn
 abstract class BaseViewModel(
     private val dispatchers: ProfDispatchers
 ) : ViewModel() {
+
+    var loadingState by mutableStateOf<LoadingState?>(null)
+    fun isLoading() = loadingState == LoadingState.LOADING
     protected fun <T> Flow<T>.flowOnUI() = flowOn(dispatchers.mainDispatcher)
 
     protected fun <T> Flow<T>.flowOnBackground() = flowOn(dispatchers.defaultDispatcher)

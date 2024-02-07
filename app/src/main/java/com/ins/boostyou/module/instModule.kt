@@ -24,7 +24,7 @@ val instModule = module {
         InAppPaymentValidationRepoImpl(ioDispatcher = Dispatchers.IO, get())
     }
     factory<InstBoostPaymentService> {
-        GoogleBillingServiceImpl(get(), get())
+        GoogleBillingServiceImpl(get(), get(), get())
     }
     factory<InstMainRepo> {
         InstMainRepoImpl(get(), get())
@@ -38,7 +38,7 @@ val instModule = module {
 
 
     viewModel {
-        MainActivityViewModel(get(), get())
+        MainActivityViewModel(get(), get(), get())
     }
 
     viewModel {
