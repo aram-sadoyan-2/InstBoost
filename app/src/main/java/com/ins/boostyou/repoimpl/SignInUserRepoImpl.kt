@@ -35,10 +35,6 @@ class SignInUserRepoImpl(
 
     override suspend fun getUserInfo(): AppResult<UserInfo> {
         return try {
-           // val deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-//            if (deviceId.isNullOrEmpty()){
-//                AppResult.Error(Exception("Device Id does not exists"))
-//            }
             val response = api.getUserInfo()
             if (response == null) {
                 AppResult.Error(Exception("empty data"))

@@ -58,7 +58,7 @@ interface RetrofitPostServiceApi {
 
     @POST("/apiV2.php")
     suspend fun requestRemotePackages(
-        @Header("actionww") action: String? = "getPriceList"
+        @Header("action") action: String? = "getPriceList"
     ): RemotePackages?
 
     @POST("/apiV2.php")

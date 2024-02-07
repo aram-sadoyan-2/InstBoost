@@ -13,7 +13,6 @@ import com.ins.boostyou.model.response.UserData
 import com.ins.boostyou.model.response.UserMedia
 import com.ins.boostyou.model.response.UserMediaInfoList
 import com.ins.boostyou.model.response.UserState
-import com.ins.boostyou.utils.UserRegisterStatus
 
 class InstMainRepoImpl(
     private val api: RetrofitPostServiceApi,

@@ -69,8 +69,8 @@ class GoogleBillingServiceImpl(
                 // The BillingClient is ready. You can query purchases here.
                val userStatus = signInUserRepo.createUserIfNotExist()
                 Log.d("dwd","USER_STATUS $userStatus")
-              // remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
-                remotePackages = mutableListOf(RemotePackageItem(packageId = "android.test.purchased"))
+                remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
+               // remotePackages = mutableListOf(RemotePackageItem(packageId = "android.test.purchased"))
                 refreshDetails()
                // getProductsInfo(remoteSettings.getRemoteSettings())
                 //todo if packageIds exists
