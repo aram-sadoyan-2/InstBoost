@@ -13,9 +13,47 @@ class SignInUserRepoImpl(
     private val api: RetrofitPostServiceApi,
     private val context: Context
 ) : SignInUserRepo {
-    override suspend fun createUserIfNotExist(userName: String): UserRegisterStatus {
+//    override suspend fun createUserIfNotExist(userName: String): UserRegisterStatus {
+//        return try {
+//            val response = api.createUserIfNotExist(userName)
+//            response?.let {
+//                when (it.status) {
+//                    "done" -> {
+//                        UserRegisterStatus.USER_CREATED
+//                    }
+//                    "user_exist" -> UserRegisterStatus.USER_EXISTS
+//                    else -> UserRegisterStatus.ERROR
+//                }
+//            } ?: run {
+//                UserRegisterStatus.ERROR
+//            }
+//        } catch (e: Exception) {
+//            Log.d("dwd", "createUserIfNotExist " + e.message)
+//            UserRegisterStatus.ERROR
+//        }
+//    }
+
+    override suspend fun getUserInfo(): AppResult<UserInfo> {
         return try {
-            val response = api.createUserIfNotExist(userName)
+           // val deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+//            if (deviceId.isNullOrEmpty()){
+//                AppResult.Error(Exception("Device Id does not exists"))
+//            }
+            val response = api.getUserInfo()
+            if (response == null) {
+                AppResult.Error(Exception("empty data"))
+            } else {
+                handleSuccess(response)
+            }
+        } catch (e: Exception) {
+            Log.d("dwd", "getUserInfo " + e.message)
+            AppResult.Error(e)
+        }
+    }
+
+    override suspend fun createUserIfNotExist(): UserRegisterStatus {
+        return try {
+            val response = api.createUserIfNotExist()
             response?.let {
                 when (it.status) {
                     "done" -> {
@@ -30,20 +68,6 @@ class SignInUserRepoImpl(
         } catch (e: Exception) {
             Log.d("dwd", "createUserIfNotExist " + e.message)
             UserRegisterStatus.ERROR
-        }
-    }
-
-    override suspend fun getUserInfo(userName: String): AppResult<UserInfo> {
-        return try {
-            val response = api.getUserInfo(userName)
-            if (response == null) {
-                AppResult.Error(Exception("empty data"))
-            } else {
-                handleSuccess(response)
-            }
-        } catch (e: Exception) {
-            Log.d("dwd", "getUserInfo " + e.message)
-            AppResult.Error(e)
         }
     }
 }

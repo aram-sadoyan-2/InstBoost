@@ -56,49 +56,46 @@ interface RetrofitPostServiceApi {
 
 
 
-
-    @FormUrlEncoded
-    @POST("/api.php")
+    @POST("/apiV2.php")
     suspend fun requestRemotePackages(
-        @Field("action") action: String? = "getPriceList"
+        @Header("actionww") action: String? = "getPriceList"
     ): List<RemotePackages>?
 
-    @FormUrlEncoded
-    @POST("/api.php")
+    @POST("/apiV2.php")
     suspend fun createUserIfNotExist(
-        @Field("user_name") userName: String,
-        @Field("action") action: String? = "createUserIfNotExist",
+        @Header("action") action: String? = "createUserIfNotExist",
     ): BaseResponse?
 
-    @FormUrlEncoded
-    @POST("/api.php")
+    @POST("/apiV2.php")
     suspend fun getUserInfo(
-        @Field("user_name") userName: String,
-        @Field("action") action: String? = "getUserInfo",
+        @Header("action") action: String? = "getUserInfo",
     ): UserInfo?
 
-    @FormUrlEncoded
-    @POST("/api.php")
+    @POST("/apiV2.php")
     suspend fun getLikePriceList(
-        @Field("action") action: String? = "getLikePriceList",
+        @Header("action") action: String? = "getLikePriceList",
     ): Any?
 
-    @FormUrlEncoded
-    @POST("/api.php")
+    @POST("/apiV2.php")
     suspend fun getFollowerPriceList(
-        @Field("action") action: String? = "getFollowerPriceList",
+        @Header("action") action: String? = "getFollowerPriceList",
     ): Any?
 
-    @FormUrlEncoded
-    @POST("/api.php")
+    @POST("/apiV2.php")
     suspend fun requestBoostTask(
+        @Header("action") action: String? = "boostyouRequest",
         @Field("user_name") userName: String,
         @Field("task_typ") taskType: String,
         @Field("type") type: String,
         @Field("count") count: Int,
         @Field("price") price: Double,
         @Field("service_url") serviceUrl: String,
-        @Field("action") action: String? = "boostyouRequest",
+    ): Any?
+
+    @POST("/apiV2.php")
+    suspend fun subTrackUserCoinsIfSpent(
+        @Header("action") action: String? = "subtrackUserCoinsIfSpent",
+        @Field("coins_minused") coinsMinus: String,
     ): Any?
 
 

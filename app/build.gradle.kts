@@ -1,8 +1,6 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -17,8 +15,8 @@ android {
         applicationId = "com.ins.boostyou"
         minSdk = 24
         targetSdk = 34
-        versionCode = 7
-        versionName = "1.1.4"
+        versionCode = 10
+        versionName = "1.1.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -28,7 +26,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -110,9 +108,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("androidx.startup:startup-runtime:1.1.1")
 
-//    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
-//    implementation("com.google.firebase:firebase-analytics")
-    //implementation ("com.google.firebase:firebase-crashlytics")
     implementation("com.airbnb.android:lottie-compose:6.3.0")
+
 }
 

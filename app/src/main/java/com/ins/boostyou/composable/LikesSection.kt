@@ -32,7 +32,6 @@ import com.ins.boostyou.R
 @Preview
 @Composable
 fun LikesSection() {
-    val abs = rememberScrollState()
     Column(
         Modifier
             .padding(bottom = 82.dp)

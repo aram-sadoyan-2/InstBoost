@@ -26,7 +26,7 @@ class InstMainRepoImpl(
     ): AppResult<UserData> {
         return try {
             val usrNme = userName ?: getUserNameFromPref()
-            if (usrNme.isEmpty()){
+            if (usrNme.isEmpty()) {
                 AppResult.Error(Exception("userName does not exists"))
             }
             api.getPostDataFromNewJson(
@@ -43,8 +43,6 @@ class InstMainRepoImpl(
                     !userData.id.isNullOrBlank() &&
                     !userData.userName.isNullOrBlank()
                 ) {
-                    val userRegisterStatus = createUserIfNotExist(userData.userName)
-                    Log.d("dwd", "userRegisterStatus = ${userRegisterStatus.name}")
                     FileDataUtils.saveUsNmAndId(context, userData.id, userData.userName)
                 }
                 handleSuccess(userData)
@@ -66,25 +64,7 @@ class InstMainRepoImpl(
         return FileDataUtils.getUsNameFromLocal(context)
     }
 
-    private suspend fun createUserIfNotExist(userName: String): UserRegisterStatus {
-        return try {
-            val response = api.createUserIfNotExist(userName)
-            response?.let {
-                when (it.status) {
-                    "done" -> {
-                        UserRegisterStatus.USER_CREATED
-                    }
-                    "user_exist" -> UserRegisterStatus.USER_EXISTS
-                    else -> UserRegisterStatus.ERROR
-                }
-            } ?: run {
-                UserRegisterStatus.ERROR
-            }
-        } catch (e: Exception) {
-            Log.d("dwd", "createUserIfNotExist " + e.message)
-            UserRegisterStatus.ERROR
-        }
-    }
+
 
     private fun parseToUserData(response: InstPrData?): UserData {
         //contains User Media Info list

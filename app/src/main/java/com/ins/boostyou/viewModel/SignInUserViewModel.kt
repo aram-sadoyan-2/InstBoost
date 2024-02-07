@@ -18,15 +18,15 @@ class SignInUserViewModel(
     private val _userInfo = MutableLiveData<AppResult<UserInfo>>()
     val userInfo = _userInfo
 
-    fun createUserIfNotExist(userName: String) {
+    init {
+        createUserIfNotExist()
+    }
+
+    private fun createUserIfNotExist() {
         launchOnBackground {
-          //  _userRegistrationStatus.postValue(repo.createUserIfNotExist(userName))
+            repo.createUserIfNotExist()
         }
     }
 
-    fun getUserInfo(userName: String) {
-        launchOnBackground {
-            _userInfo.postValue(repo.getUserInfo(userName))
-        }
-    }
+
 }

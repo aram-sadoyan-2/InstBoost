@@ -20,6 +20,7 @@ import com.ins.boostyou.billing.domain.PackageDetailsResponse
 import com.ins.boostyou.billing.domain.PackageDetailsStatus
 import com.ins.boostyou.billing.domain.PackageProcessStatus
 import com.ins.boostyou.model.response.boostyou.RemotePackages
+import com.ins.boostyou.repository.SignInUserRepo
 import com.ins.boostyou.utils.orFalse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,8 +34,8 @@ const val PERIOD_LIFETIME_SUFFIX = "L"
 class GoogleBillingServiceImpl(
     private val context: Context,
     private val remoteSettings: RemoteSettingsService,
-    //private val mapper: GooglePaymentInfoMapper
-) : PurchasesUpdatedListener, BillingClientStateListener, InstBoostPaymentService {
+    private val signInUserRepo: SignInUserRepo,
+    ) : PurchasesUpdatedListener, BillingClientStateListener, InstBoostPaymentService {
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var billingClient: BillingClient? = null
     private var inAppDetailsResponse = PackageDetailsResponse()
@@ -65,8 +66,9 @@ class GoogleBillingServiceImpl(
         coroutineScope.launch {
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 // The BillingClient is ready. You can query purchases here.
-              // remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
-                remotePackages = mutableListOf(RemotePackages(packageId = "android.test.purchased"))
+               val userStatus = signInUserRepo.createUserIfNotExist()
+                Log.d("dwd","USER_STATUS $userStatus")
+               remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
                 refreshDetails()
                // getProductsInfo(remoteSettings.getRemoteSettings())
                 //todo if packageIds exists
