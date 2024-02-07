@@ -38,7 +38,6 @@ class MainActivityViewModel(
     }
 
     private suspend fun requestUserInfo() {
-        //launchOnBackground {
             signInUserRepo.getUserInfo().apply {
                 when (this) {
                     is AppResult.Success -> {
@@ -51,11 +50,9 @@ class MainActivityViewModel(
                     }
                 }
             }
-       // }
     }
 
     suspend fun requestDataFromNewJson(userName: String? = null) {
-       // launchOnBackground {
             instMainRepo.getPostDataFromNewJson(userName).apply {
                 when (this) {
                     is AppResult.Success -> {
@@ -67,7 +64,6 @@ class MainActivityViewModel(
                         Log.d("dwd", "requestInstUserdata Error")
                     }
                 }
-          //  }
         }
     }
 
@@ -88,7 +84,7 @@ class MainActivityViewModel(
         isSwipeToTheLeft= delta > 0
     }
 
-    private val _dragState = MutableLiveData<DraggableState>(draggableState)
+    private val _dragState = MutableLiveData(draggableState)
     val dragState: LiveData<DraggableState> = _dragState
 
     fun updateTabIndexBasedOnSwipe() {

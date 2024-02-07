@@ -9,7 +9,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ins.boostyou.model.response.UserState
 import com.ins.boostyou.viewModel.ComposeNavigationViewModel
@@ -46,7 +45,6 @@ fun FistPage(
                         Spacer(modifier = Modifier.height(20.dp))
                         Divider(thickness = 1.dp, color = Color(0xFFD9DDE1))
                         when (composeNavigationViewModel.selectedTabItem) {
-                            // 0-> LikesSection()
                             0 -> TabScreenPrice(mainActivityViewModel)
                             1 -> FollowersSection()
                             2 -> CommentsSection()
