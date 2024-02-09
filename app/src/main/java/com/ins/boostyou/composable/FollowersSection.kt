@@ -35,10 +35,11 @@ fun FollowersSection() {
     val abs = rememberScrollState()
     Column(
         Modifier
-            .padding(bottom = 82.dp)
+            .padding(bottom = 52.dp)
             .background(Color.White)
             .fillMaxHeight()
-            .verticalScroll(rememberScrollState()),) {
+            .verticalScroll(rememberScrollState()),
+    ) {
         repeat(20) {
             FollowersSectionItem()
         }
@@ -50,7 +51,8 @@ fun FollowersSection() {
 fun FollowersSectionItem() {
     Row(
         modifier = Modifier
-            .fillMaxWidth().fillMaxHeight()
+            .fillMaxWidth()
+            .fillMaxHeight()
             //.padding(horizontal = 32.dp, vertical = 8.dp)
             .padding(start = 32.dp, top = 16.dp, end = 32.dp)
             .background(Color.White),
@@ -62,7 +64,8 @@ fun FollowersSectionItem() {
             Modifier.size(32.dp, 32.dp)
         )
         Text(text = "X", Modifier.padding(horizontal = 16.dp), textAlign = TextAlign.Center)
-        Text(text = "200",
+        Text(
+            text = "200",
             modifier = Modifier.weight(1f),
             style = TextStyle(
                 fontSize = 18.sp
