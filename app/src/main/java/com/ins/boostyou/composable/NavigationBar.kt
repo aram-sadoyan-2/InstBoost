@@ -1,9 +1,16 @@
 package com.ins.boostyou.composable
 
-import androidx.compose.runtime.Composable
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
@@ -15,25 +22,39 @@ import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.surfaceColorAtElevation
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import com.ins.boostyou.viewModel.ComposeNavigationViewModel
 import com.ins.boostyou.viewModel.InAppPurchaseViewModel
 import com.ins.boostyou.viewModel.MainActivityViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "SuspiciousIndentation")
 @Composable
 fun NavigationBar(
     inAppPurchaseViewModel: InAppPurchaseViewModel,
@@ -65,22 +86,18 @@ fun NavigationBar(
     val tabBarItems = listOf(homeTab, alertsTab, settingsTab, moreTab)
 
     //InstBoostTheme {
-        // A surface container using the 'background' color from the theme
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
+    // A surface container using the 'background' color from the theme
+    Box(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        Scaffold(
+            bottomBar = { TabView(tabBarItems, composeNavigationViewModel) {} },
+            modifier = Modifier.fillMaxHeight()
         ) {
-            Scaffold(bottomBar = {
-                //Adding first Likes page At first
-                TabView(tabBarItems, composeNavigationViewModel) {
-                    Log.d("dwd", "TabView $it")
-                }
-            }) {
-                Log.d("dwd", "Nav Host iNit")
-                FistPage(composeNavigationViewModel, mainActivityViewModel, inAppPurchaseViewModel)
-            }
+            FistPage(composeNavigationViewModel, mainActivityViewModel, inAppPurchaseViewModel)
         }
-   // }
+    }
+    // }
 }
 
 @Composable
@@ -89,15 +106,18 @@ fun TabView(
     composeNavigationViewModel: ComposeNavigationViewModel,
     onTabSelect: (Int) -> Unit
 ) {
-    var selectedTabIndex by rememberSaveable {
-        mutableStateOf(0)
-    }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
-    NavigationBar {
-        // looping over each tab to generate the views and navigation for each item
+    NavigationBar(
+        containerColor = Color.Transparent,
+        modifier = Modifier.height(50.dp).then(socialProofCardBackgroundModifier),
+    ) {
         tabBarItems.forEachIndexed { index, tabBarItem ->
             NavigationBarItem(
                 selected = selectedTabIndex == index,
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.CenterVertically),
                 onClick = {
                     composeNavigationViewModel.selectedTabItem = index
                     selectedTabIndex = index
@@ -110,16 +130,18 @@ fun TabView(
                         selectedIcon = tabBarItem.selectedIcon,
                         unselectedIcon = tabBarItem.unselectedIcon,
                         title = tabBarItem.title,
-                        badgeAmount = tabBarItem.badgeAmount
+                        badgeAmount = tabBarItem.badgeAmount,
                     )
                 },
-                label = { Text(tabBarItem.title) })
+                colors = NavigationBarItemDefaults
+                    .colors(
+                        indicatorColor = Color.White
+                    )
+            )
         }
     }
 }
 
-// This component helps to clean up the API call from our TabView above,
-// but could just as easily be added inside the TabView without creating this custom component
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TabBarIconView(
@@ -131,18 +153,12 @@ fun TabBarIconView(
 ) {
     BadgedBox(badge = { TabBarBadgeView(badgeAmount) }) {
         Icon(
-            imageVector = if (isSelected) {
-                selectedIcon
-            } else {
-                unselectedIcon
-            },
-            contentDescription = title
+            imageVector = if (isSelected) selectedIcon else unselectedIcon,
+            contentDescription = title,
         )
     }
 }
 
-// This component helps to clean up the API call from our TabBarIconView above,
-// but could just as easily be added inside the TabBarIconView without creating this custom component
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun TabBarBadgeView(count: Int? = null) {
@@ -152,30 +168,6 @@ fun TabBarBadgeView(count: Int? = null) {
         }
     }
 }
-// end of the reusable components that can be copied over to any new projects
-// ----------------------------------------
-
-// This was added to demonstrate that we are infact changing views when we click a new tab
-//@Composable
-//fun MoreView() {
-//    Column(
-//        modifier = Modifier.fillMaxSize()
-//    ) {
-//        Text("Thing 1")
-//        Text("Thing 2")
-//        Text("Thing 3")
-//        Text("Thing 4")
-//        Text("Thing 5")
-//    }
-//}
-
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    BottomNavBarExampleTheme {
-//        MoreView()
-//    }
-//}
 
 data class TabBarItem(
     val title: String,
@@ -183,3 +175,20 @@ data class TabBarItem(
     val unselectedIcon: ImageVector,
     val badgeAmount: Int? = null
 )
+
+val socialProofCardBackgroundModifier = Modifier
+    .background(
+        Brush.linearGradient(
+            colors = listOf(
+                Color(0xFF00FFED),
+                Color(0xFF19D7E7),
+                Color(0xFF7F4AD9),
+                Color(0xFFAF1FC6),
+                Color(0x0DDF02C0),
+                Color(0x0DDF02C0),
+                Color(0x1AFFFFFF),
+            ),
+            start = Offset(0f, 10f),
+        ),
+        alpha = 0.1f,
+    )

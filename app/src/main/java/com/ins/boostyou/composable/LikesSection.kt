@@ -34,13 +34,14 @@ import com.ins.boostyou.R
 fun LikesSection() {
     Column(
         Modifier
-            .padding(bottom = 82.dp)
+            .padding(bottom = 52.dp)
             .background(Color.White)
             .fillMaxHeight()
             .verticalScroll(rememberScrollState()),) {
         repeat(20) {
             LikesSectionItem()
         }
+
     }
 }
 
@@ -49,8 +50,8 @@ fun LikesSection() {
 fun LikesSectionItem() {
     Row(
         modifier = Modifier
-            .fillMaxWidth().fillMaxHeight()
-            //.padding(horizontal = 32.dp, vertical = 8.dp)
+            .fillMaxWidth()
+            .fillMaxHeight()
             .padding(start = 32.dp, top = 16.dp, end = 32.dp)
             .background(Color.White),
         verticalAlignment = Alignment.CenterVertically

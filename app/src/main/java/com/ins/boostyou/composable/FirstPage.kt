@@ -25,14 +25,15 @@ fun FistPage(
     when {
         mainActivityViewModel.isLoading() -> LoadingView()
         else -> {
-
             //todo move to another function
             when (composeNavigationViewModel.selectedTabItem) {
-                0, 1, 2 -> {
-                    //val scroll = rememberScrollState()
+                3 -> {
+                    MorePage(inAppPurchaseViewModel, mainActivityViewModel)
+                }
+
+                else -> {
                     Column(
-                        Modifier
-                            .background(Color.White)
+                        Modifier.background(Color.White)
                     ) {
                         if (mainActivityViewModel.userData.userState == UserState.SIGNED_IN) {
                             UserInfoSection(composeNavigationViewModel, mainActivityViewModel)
@@ -54,16 +55,7 @@ fun FistPage(
                         }
                     }
                 }
-
-                3 -> {
-                    Log.d("dwd", "KHJBHN 3")
-                    MorePage(inAppPurchaseViewModel, mainActivityViewModel)
-                }
             }
-
-
         }
     }
-
-
 }
