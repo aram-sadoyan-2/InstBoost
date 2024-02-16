@@ -18,62 +18,132 @@ import kotlinx.coroutines.launch
 import androidx.compose.foundation.gestures.DraggableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.ins.boostyou.model.request.BoostYouTaskRequest
+import com.ins.boostyou.model.response.BaseResponse
+import com.ins.boostyou.model.response.UserMediaInfoList
+import com.ins.boostyou.model.response.boostyou.LikesPriceItem
+import com.ins.boostyou.model.response.boostyou.LikesPriceListModel
+import com.ins.boostyou.repository.PaymentActionRepo
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MainActivityViewModel(
     private var instMainRepo: InstMainRepo,
     private var signInUserRepo: SignInUserRepo,
+    private var repo: PaymentActionRepo,
     dispatchers: ProfDispatchers,
 ) : BaseViewModel(dispatchers) {
 
     var userData by mutableStateOf(UserData())
     var userInfo by mutableStateOf(UserInfo())
+    var likeCoast by mutableStateOf(LikesPriceListModel())
+    var followerCoast by mutableStateOf(LikesPriceListModel())
+    var goldFollowerCoast by mutableStateOf(LikesPriceListModel())
+    var goldLikeCoast by mutableStateOf(LikesPriceListModel())
+    var commentsCoast by mutableStateOf(LikesPriceListModel())
+
+    //private val _taskResultData = MutableStateFlow<BaseResponse?>(null)
+    //val taskResultData = _taskResultData.asStateFlow()
+
+    var boostYouTaskRequest = BoostYouTaskRequest()
+    var taskResultData by mutableStateOf(BaseResponse())
 
     init {
         viewModelScope.launch {
-            loadingState = LoadingState.LOADING
-          //  requestUserInfo()
-            requestDataFromNewJson("aramsadoy")
+            requestData()
+        }
+    }
+
+    private suspend fun requestData() {
+        loadingState = LoadingState.LOADING
+        signInUserRepo.createUserIfNotExist().let {
+            requestServiceCoasts()
+            requestUserInfo()
+            requestDataFromNewJson()
             loadingState = null
         }
     }
 
-    private suspend fun requestUserInfo() {
-            signInUserRepo.getUserInfo().apply {
-                when (this) {
-                    is AppResult.Success -> {
-                        Log.d("dwd", "requestUserInfo ---- " + successData)
-                        userInfo = successData
-                    }
+    private suspend fun requestServiceCoasts() {
+        when (val result = instMainRepo.requestLikePrices()) {
+            is AppResult.Success -> likeCoast = result.successData
+            else -> {}
+        }
+        goldLikeCoast =
+            likeCoast.copy(data = likeCoast.data?.map {
+                LikesPriceItem(
+                    count = it.count.or(0).times(2), price = it.price?.times(
+                        2
+                    )
+                )
+            })
 
-                    is AppResult.Error -> {
-                        Log.d("dwd", "requestUserInfo Error")
-                    }
-                }
-            }
-    }
 
-    suspend fun requestDataFromNewJson(userName: String? = null) {
-            instMainRepo.getPostDataFromNewJson(userName).apply {
-                when (this) {
-                    is AppResult.Success -> {
-                        Log.d("dwd", "requestInstUserdata ---- " + successData)
-                        userData = successData
-                    }
+        when (val result = instMainRepo.requestFollowerPrices()) {
+            is AppResult.Success -> followerCoast = result.successData
+            else -> {}
+        }
+        goldFollowerCoast =
+            followerCoast.copy(data = followerCoast.data?.map {
+                LikesPriceItem(
+                    count = it.count.or(0).times(
+                        2
+                    ), price = it.price?.times(2)
+                )
+            })
 
-                    is AppResult.Error -> {
-                        Log.d("dwd", "requestInstUserdata Error")
-                    }
-                }
+
+        when (val result = instMainRepo.requestCommentPrices()) {
+            is AppResult.Success -> commentsCoast = result.successData
+            else -> {}
         }
     }
 
+    private suspend fun requestUserInfo() {
+        signInUserRepo.getUserInfo().apply {
+            when (this) {
+                is AppResult.Success -> {
+                    Log.d("dwd", "requestUserInfo ---- $successData")
+                    userInfo = successData
+                }
 
-    fun logOut() {
+                is AppResult.Error -> {
+                    Log.d("dwd", "requestUserInfo Error")
+                }
+            }
+        }
+    }
+
+    suspend fun requestDataFromNewJson(
+        userName: String? = null,
+        saveUserName: Boolean? = false,
+        showLoading: Boolean? = false,
+    ) {
+        if (showLoading == true) {
+            loadingState = LoadingState.LOADING
+        }
+        when (val result = instMainRepo.getPostDataFromNewJson(userName, saveUserName)) {
+            is AppResult.Success -> {
+                userData = result.successData
+                if (showLoading == true) {
+                    loadingState = null
+                }
+            }
+
+            else -> {
+
+                if (showLoading == true) {
+                    loadingState = null
+                }
+            }
+        }
+    }
+
+    suspend fun logOut() {
         userData = UserData(userState = UserState.DOES_NOT_EXIST)
         //todo move to signinRepo
         instMainRepo.logOutUser()
     }
-
 
     private val _tabIndex: MutableLiveData<Int> = MutableLiveData(0)
     val tabIndex: LiveData<Int> = _tabIndex
@@ -81,7 +151,7 @@ class MainActivityViewModel(
 
     var isSwipeToTheLeft: Boolean = false
     private val draggableState = DraggableState { delta ->
-        isSwipeToTheLeft= delta > 0
+        isSwipeToTheLeft = delta > 0
     }
 
     private val _dragState = MutableLiveData(draggableState)
@@ -99,9 +169,29 @@ class MainActivityViewModel(
     }
 
 
-
-
     private fun <T> MutableLiveData<T>.setValueSafe(value: T?) =
         if (Looper.getMainLooper() == Looper.myLooper()) this.value = value else postValue(value)
 
+
+
+    fun requestTask() {
+        Log.d("dwd","TaskResultData $boostYouTaskRequest")
+        launchOnBackground {
+          //  repo.requestTask(boostYouTaskRequest).collect {
+               // taskResultData = it
+              //  Log.d("dwd","TaskResultData $it")
+         //   }
+        }
+    }
+
+    fun setImageUrlToBoostYouRequest(
+        page: Int,
+        userMediaInfoList: MutableList<UserMediaInfoList?>
+    ) {
+        Log.d("dwd", "dwdqwdq $page $userMediaInfoList")
+        when (page) {
+            0 -> boostYouTaskRequest.serviceUrl = null
+            else -> boostYouTaskRequest.serviceUrl = userMediaInfoList[page]?.postUrl
+        }
+    }
 }

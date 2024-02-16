@@ -30,24 +30,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-//    private fun requestInstUserdata() {
-//        mainActivityViewModel.requestDataFromNewJson()
-//        mainActivityViewModel.userPostData.observe(this) {
-//            it?.let {
-//                when (it) {
-//                    is AppResult.Success -> {
-//                        Log.d("dwd", "requestInstUserdata ---- " + it.successData)
-//                    }
-//                    is AppResult.Error -> {
-//                        Log.d("dwd", "requestInstUserdata Error")
-//                    }
-//                    else -> {}
-//                }
-//            }
-//        }
-//    }
-
-
     private fun observeForInAppPurchaseState() {
         inAppPurchaseViewModel.inAppPurchaseStateLiveData.observe(this) {
                 inAppPurchaseState: InAppPurchaseState? ->
@@ -75,7 +57,7 @@ class MainActivity : ComponentActivity() {
 //                        PaymentInfo(Status.FAILURE, "sku", "", "", userStateManager.userId)
                    // oneTimePaymentIntent.putExtra(EXTRA_PAYMENT_INFO, paymentInfo)
                    // setResult(ONE_TIME_SUBSCRIPTION_REQUEST_CODE, oneTimePaymentIntent)
-                    finish()
+                   // finish()
                 }
                 is InAppPurchaseState.UserCanceled -> {
                     Log.d("dwd","InAppPurchaseStateLiveData UserCanceled" )

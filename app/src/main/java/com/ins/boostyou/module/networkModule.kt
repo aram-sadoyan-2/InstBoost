@@ -1,6 +1,7 @@
 package com.ins.boostyou.module
 import android.content.Context
 import android.provider.Settings
+import android.util.Log
 import com.ins.boostyou.AppConstants
 import com.ins.boostyou.api.RetrofitPostServiceApi
 import com.ins.boostyou.controller.AuthInterceptor
@@ -28,19 +29,22 @@ fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
 }
 
 fun provideOkHttpClient(authInterceptor: AuthInterceptor, context: Context): OkHttpClient {
-
     val clientBuilder = OkHttpClient.Builder()
     val dId =
         Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+    Log.d("dwd","Device_id $dId")
     clientBuilder.addInterceptor { chain ->
         val newRequest = chain.request().newBuilder()
             .addHeader("device_id", dId)
             .build()
         chain.proceed(newRequest)
     }
-
-    return clientBuilder.build()
+    return clientBuilder.addInterceptor(authInterceptor).build()
 }
+
+//fun provideOkHttpClient(authInterceptor: AuthInterceptor, context: Context): OkHttpClient {
+//    return OkHttpClient().newBuilder().addInterceptor(authInterceptor).build()
+//}
 
 fun provideForecastApi(retrofit: Retrofit): RetrofitPostServiceApi = retrofit.create(RetrofitPostServiceApi::class.java)
 

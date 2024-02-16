@@ -1,3 +1,5 @@
+@file:Suppress("IMPLICIT_CAST_TO_ANY")
+
 package com.ins.boostyou.composable
 
 import android.annotation.SuppressLint
@@ -7,9 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -22,21 +21,13 @@ import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalAbsoluteTonalElevation
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -47,9 +38,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.ins.boostyou.R
 import com.ins.boostyou.viewModel.ComposeNavigationViewModel
 import com.ins.boostyou.viewModel.InAppPurchaseViewModel
 import com.ins.boostyou.viewModel.MainActivityViewModel
@@ -59,13 +51,16 @@ import com.ins.boostyou.viewModel.MainActivityViewModel
 fun NavigationBar(
     inAppPurchaseViewModel: InAppPurchaseViewModel,
     composeNavigationViewModel: ComposeNavigationViewModel,
-    mainActivityViewModel: MainActivityViewModel
+    mainActivityViewModel: MainActivityViewModel,
+
 ) {
     // setting up the individual tabs
     val homeTab = TabBarItem(
         title = "Likes",
         selectedIcon = Icons.Filled.Home,
-        unselectedIcon = Icons.Outlined.Home
+        unselectedIcon = Icons.Outlined.Home,
+        selectedPainter = R.drawable.ic_hert_filled,
+        unselectedPainter = R.drawable.ic_heart_outline
     )
     val alertsTab = TabBarItem(
         title = "Followers",
@@ -94,7 +89,11 @@ fun NavigationBar(
             bottomBar = { TabView(tabBarItems, composeNavigationViewModel) {} },
             modifier = Modifier.fillMaxHeight()
         ) {
-            FistPage(composeNavigationViewModel, mainActivityViewModel, inAppPurchaseViewModel)
+            FistPage(
+                composeNavigationViewModel,
+                mainActivityViewModel,
+                inAppPurchaseViewModel,
+            )
         }
     }
     // }
@@ -110,7 +109,9 @@ fun TabView(
 
     NavigationBar(
         containerColor = Color.Transparent,
-        modifier = Modifier.height(50.dp).then(socialProofCardBackgroundModifier),
+        modifier = Modifier
+            .height(50.dp)
+            .then(socialProofCardBackgroundModifier),
     ) {
         tabBarItems.forEachIndexed { index, tabBarItem ->
             NavigationBarItem(
@@ -131,6 +132,8 @@ fun TabView(
                         unselectedIcon = tabBarItem.unselectedIcon,
                         title = tabBarItem.title,
                         badgeAmount = tabBarItem.badgeAmount,
+                        selectedPainter = tabBarItem.selectedPainter,
+                        unSelectedPainter = tabBarItem.unselectedPainter
                     )
                 },
                 colors = NavigationBarItemDefaults
@@ -149,13 +152,26 @@ fun TabBarIconView(
     selectedIcon: ImageVector,
     unselectedIcon: ImageVector,
     title: String,
-    badgeAmount: Int? = null
+    badgeAmount: Int? = null,
+    selectedPainter: Int? = null,
+    unSelectedPainter: Int? = null,
 ) {
     BadgedBox(badge = { TabBarBadgeView(badgeAmount) }) {
-        Icon(
-            imageVector = if (isSelected) selectedIcon else unselectedIcon,
-            contentDescription = title,
-        )
+        if (selectedPainter != null && unSelectedPainter != null) {
+            Icon(
+                painter = if (isSelected) painterResource(selectedPainter) else painterResource(
+                    unSelectedPainter
+                ),
+                // imageVector = if (isSelected) selectedIcon else unselectedIcon,
+                contentDescription = title,
+            )
+        } else {
+            Icon(
+                imageVector = if (isSelected) selectedIcon else unselectedIcon,
+                contentDescription = title,
+            )
+        }
+
     }
 }
 
@@ -170,6 +186,15 @@ fun TabBarBadgeView(count: Int? = null) {
 }
 
 data class TabBarItem(
+    val title: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val badgeAmount: Int? = null,
+    val selectedPainter: Int? = null,
+    val unselectedPainter: Int? = null,
+)
+
+data class TabBarItemCustomIcons(
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
