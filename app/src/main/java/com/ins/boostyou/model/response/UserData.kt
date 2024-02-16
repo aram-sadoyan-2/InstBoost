@@ -20,6 +20,7 @@ data class UserMedia(
 data class UserMediaInfoList(
     val id: String? = "",
     val displayUrl: String? = "",
+    val postUrl: String? = "",
     val thumbnailSrcUrl: String? = "",
     val likeCount: Long? = 0,
     val likeMediaPreviewCount: Long? = 0,

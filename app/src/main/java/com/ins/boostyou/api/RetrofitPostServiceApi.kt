@@ -5,6 +5,7 @@ import com.ins.boostyou.model.response.InstAccessTokenResponseModel
 import com.ins.boostyou.model.response.InstUserMediaJs
 import com.ins.boostyou.model.response.boostyou.RemotePackages
 import com.ins.boostyou.model.response.InstPrData
+import com.ins.boostyou.model.response.boostyou.LikesPriceListModel
 import com.ins.boostyou.model.response.boostyou.UserInfo
 import retrofit2.http.*
 
@@ -21,6 +22,17 @@ interface RetrofitPostServiceApi {
         @Header("X-IG-WWW-Claim") claim: Int,
         @Header("X-Requested-With") requestedWith: String,
     ): InstPrData?
+
+    @GET("https://www.instagram.com/api/v1/users/web_profile_info/")
+    suspend fun getPostDataFromNewJsonTest(
+        @Query("username") userName: String,
+        @Header("sec-fetch-dest") secFetchDest: String,
+        @Header("sec-fetch-mode") secFetchMode: String,
+        @Header("sec-fetch-site") secFetchSite: String,
+        @Header("X-IG-App-ID") appId: Long,
+        @Header("X-IG-WWW-Claim") claim: Int,
+        @Header("X-Requested-With") requestedWith: String,
+    ): String?
 
     @FormUrlEncoded
     @POST("oauth/access_token")
@@ -74,12 +86,17 @@ interface RetrofitPostServiceApi {
     @POST("/apiV2.php")
     suspend fun getLikePriceList(
         @Header("action") action: String? = "getLikePriceList",
-    ): Any?
+    ): LikesPriceListModel?
 
     @POST("/apiV2.php")
     suspend fun getFollowerPriceList(
         @Header("action") action: String? = "getFollowerPriceList",
-    ): Any?
+    ): LikesPriceListModel?
+
+    @POST("/apiV2.php")
+    suspend fun getCommentPriceList(
+        @Header("action") action: String? = "getCommentPriceList",
+    ): LikesPriceListModel?
 
     @POST("/apiV2.php")
     suspend fun requestBoostTask(
@@ -97,6 +114,24 @@ interface RetrofitPostServiceApi {
         @Header("action") action: String? = "subtrackUserCoinsIfSpent",
         @Field("coins_minused") coinsMinus: String,
     ): Any?
+
+
+
+
+
+    @FormUrlEncoded
+    @POST("/apiV2.php")
+    suspend fun requestTask(
+        @Header("action") action: String? = "boostyouRequest",
+        @Field("task_type") taskType: Int? = null,
+        @Field("service_url") serviceUrl: String? = null,
+        @Field("quality") quality: Int? = null,
+        @Field("count") count: Int? = null,
+        @Field("comments") comments: List<String>? = null
+    ): BaseResponse?
+
+
+
 
 
 

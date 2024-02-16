@@ -8,6 +8,7 @@ data class PackageDetails(
     val price: String = "",
     val currencyCode: String = "USD",
     val priceMicros: Long = 0L,
+    val name: String = "",
     val basePlanTags: List<String> = emptyList()
 ) : PackageWithStatus {
     companion object {

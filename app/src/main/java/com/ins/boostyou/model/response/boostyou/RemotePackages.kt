@@ -14,4 +14,6 @@ data class RemotePackageItem(
     @SerializedName("id_sdk") val idSdk: String? = "",
     @SerializedName("id") val id: Int? = -1,
     @SerializedName("package_id") val packageId: String? = "",
+
+    @SerializedName("name") val name: String? = "",
 ) : BaseResponse()
