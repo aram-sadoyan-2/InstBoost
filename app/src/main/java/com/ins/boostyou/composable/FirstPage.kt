@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -87,7 +86,7 @@ fun FistPage(
                         when (composeNavigationViewModel.selectedTabItem) {
                             0 -> TabScreenPriceLikes(mainActivityViewModel)
                             1 -> TabScreenPriceFollowers(mainActivityViewModel)
-                            2 -> CommentsSection()
+                            2 -> CommentsSection(mainActivityViewModel)
                         }
                     }
                 }

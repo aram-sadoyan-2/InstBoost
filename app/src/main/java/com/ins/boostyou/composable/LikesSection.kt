@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ins.boostyou.R
 import com.ins.boostyou.constants.enum.AlertPopupType
-import com.ins.boostyou.model.request.BoostYouTaskRequest
 import com.ins.boostyou.model.response.boostyou.LikesPriceItem
 import com.ins.boostyou.viewModel.MainActivityViewModel
 
