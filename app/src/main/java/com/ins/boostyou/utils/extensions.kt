@@ -1,8 +1,16 @@
 package com.ins.boostyou.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.util.Log
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import com.google.android.datatransport.runtime.logging.Logging.d
 
 fun Boolean?.orFalse() = this ?: false
 
@@ -18,4 +26,16 @@ fun Context.findActivity(): Activity {
         context = context.baseContext
     }
     throw IllegalStateException("message")
+}
+
+@SuppressLint("ModifierFactoryUnreferencedReceiver")
+inline fun Modifier.noRippleClickable(crossinline onClick: () -> Unit): Modifier = composed {
+    clickable(indication = null,
+        interactionSource = remember { MutableInteractionSource() }) {
+        onClick()
+    }
+}
+
+fun logD(value: String) {
+    Log.d("dwd",value)
 }

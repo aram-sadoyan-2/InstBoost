@@ -27,12 +27,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ins.boostyou.R
+import com.ins.boostyou.constants.enum.AlertPopupType
+import com.ins.boostyou.model.response.boostyou.LikesPriceItem
+import com.ins.boostyou.viewModel.MainActivityViewModel
 
-
-@Preview
 @Composable
-fun FollowersSection() {
-    val abs = rememberScrollState()
+fun FollowersSection(
+    mainActivityViewModel: MainActivityViewModel,
+    selectedTab: Int
+) {
+
     Column(
         Modifier
             .padding(bottom = 52.dp)
@@ -40,20 +44,34 @@ fun FollowersSection() {
             .fillMaxHeight()
             .verticalScroll(rememberScrollState()),
     ) {
-        repeat(20) {
-            FollowersSectionItem()
+        if (selectedTab == 0) {
+            mainActivityViewModel.followerCoast.data?.let { items ->
+                repeat(items.size) {
+                    FollowersSectionItem(items[it], mainActivityViewModel, qualityValue = 11)
+                }
+            }
+        } else if (selectedTab == 1) {
+            mainActivityViewModel.goldFollowerCoast.data?.let { items ->
+                repeat(items.size) {
+                    FollowersSectionItem(items[it], mainActivityViewModel, qualityValue = 30)
+                }
+            }
         }
+
     }
 }
 
-@Preview
+@Preview(device = "id:pixel_5", name = "Pixel 5 Preview")
 @Composable
-fun FollowersSectionItem() {
+fun FollowersSectionItem(
+    item: LikesPriceItem,
+    mainActivityViewModel: MainActivityViewModel,
+    qualityValue: Int
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            //.padding(horizontal = 32.dp, vertical = 8.dp)
             .padding(start = 32.dp, top = 16.dp, end = 32.dp)
             .background(Color.White),
         verticalAlignment = Alignment.CenterVertically
@@ -65,14 +83,23 @@ fun FollowersSectionItem() {
         )
         Text(text = "X", Modifier.padding(horizontal = 16.dp), textAlign = TextAlign.Center)
         Text(
-            text = "200",
+            text = item.count.toString(),
             modifier = Modifier.weight(1f),
             style = TextStyle(
                 fontSize = 18.sp
             )
         )
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                mainActivityViewModel.boostYouTaskRequest.apply {
+                    taskType = 3
+                    quality = qualityValue
+                    count = 1 // todo send 1 for test
+                }
+
+                mainActivityViewModel.showPopupType =
+                    if (mainActivityViewModel.userInfo.coinsCount < item.count) AlertPopupType.NO_ENOUGH_COIN else AlertPopupType.FOLLOWER
+            },
             modifier = Modifier.height(30.dp),
             shape = RoundedCornerShape(4.dp),
             border = BorderStroke(1.dp, Color(0XFF6A698D)),
@@ -82,7 +109,7 @@ fun FollowersSectionItem() {
             )
         ) {
             Text(
-                text = "99.99$", style = TextStyle(
+                text = item.price.toString(), style = TextStyle(
                     fontSize = 13.sp
                 )
             )

@@ -1,10 +1,12 @@
 package com.ins.boostyou.viewModel
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ins.boostyou.constants.enum.AlertPopupType
 import com.ins.boostyou.constants.enum.LoadingState
 import com.ins.boostyou.module.ProfDispatchers
 import kotlinx.coroutines.*
@@ -17,6 +19,13 @@ abstract class BaseViewModel(
 
     var loadingState by mutableStateOf<LoadingState?>(null)
     fun isLoading() = loadingState == LoadingState.LOADING
+
+    var selectedTabItem by mutableIntStateOf(0)
+
+    var showPopupType by mutableStateOf(AlertPopupType.NONE)
+
+
+
     protected fun <T> Flow<T>.flowOnUI() = flowOn(dispatchers.mainDispatcher)
 
     protected fun <T> Flow<T>.flowOnBackground() = flowOn(dispatchers.defaultDispatcher)

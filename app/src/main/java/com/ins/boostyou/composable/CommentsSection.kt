@@ -28,14 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ins.boostyou.R
 
-
 @Preview
 @Composable
 fun CommentsSection() {
-    val abs = rememberScrollState()
     Column(
         Modifier
-            .padding(bottom = 82.dp)
+            .padding(bottom = 54.dp)
             .background(Color.White)
             .fillMaxHeight()
             .verticalScroll(rememberScrollState()),) {
@@ -51,7 +49,6 @@ fun CommentsSectionItem() {
     Row(
         modifier = Modifier
             .fillMaxWidth().fillMaxHeight()
-            //.padding(horizontal = 32.dp, vertical = 8.dp)
             .padding(start = 32.dp, top = 16.dp, end = 32.dp)
             .background(Color.White),
         verticalAlignment = Alignment.CenterVertically

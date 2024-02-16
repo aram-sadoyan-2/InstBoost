@@ -32,18 +32,19 @@ import kotlinx.coroutines.launch
 
 const val FAKE_ID = "fake_id"
 const val PERIOD_LIFETIME_SUFFIX = "L"
+
 class GoogleBillingServiceImpl(
     private val context: Context,
     private val remoteSettings: RemoteSettingsService,
     private val signInUserRepo: SignInUserRepo,
-    ) : PurchasesUpdatedListener, BillingClientStateListener, InstBoostPaymentService {
+) : PurchasesUpdatedListener, BillingClientStateListener, InstBoostPaymentService {
     private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var billingClient: BillingClient? = null
     private var inAppDetailsResponse = PackageDetailsResponse()
+
     private val inAppPurchaseDoneFlow =
         MutableStateFlow<InAppPurchaseState>(InAppPurchaseState.Initial)
     private var remotePackages: MutableList<RemotePackageItem>? = null
-
 
     override fun initialize() {
         billingClient =
@@ -63,44 +64,26 @@ class GoogleBillingServiceImpl(
     }
 
     override fun onBillingSetupFinished(billingResult: BillingResult) {
-        Log.d("dwd", "GoogleBillingServiceImpl onBillingSetupFinished $billingResult.responseCode")
         coroutineScope.launch {
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                // The BillingClient is ready. You can query purchases here.
-               val userStatus = signInUserRepo.createUserIfNotExist()
-                Log.d("dwd","USER_STATUS $userStatus")
-                remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
-               // remotePackages = mutableListOf(RemotePackageItem(packageId = "android.test.purchased"))
+                 //remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
+                remotePackages = mutableListOf(
+                    RemotePackageItem(packageId = "android.test.purchased", name = "Buy 20 Coins"),
+                    RemotePackageItem(packageId = "android.test.canceled", name = "Buy 1000 Coins"),
+                    RemotePackageItem(packageId = "com.boost.coin30", name = "Buy 30 Coins"),
+                    RemotePackageItem(packageId = "coin_100", name = "Buy 10 Coins"),
+                )
                 refreshDetails()
-               // getProductsInfo(remoteSettings.getRemoteSettings())
-                //todo if packageIds exists
-                //todo query qurchase
-                //todo else call again to back-end
+                setProductDetails()
             }
         }
     }
 
-    override fun launchInAppBillingFlow(
-        activity: Activity,
-        sku: String
-    ): Flow<InAppPurchaseState> {
-        inAppPurchaseDoneFlow.value = InAppPurchaseState.Initial
-        val productDetails = inAppDetailsResponse.productDetails.find { it.productId == sku }
-        if (productDetails == null || !billingClient?.isReady.orFalse()) {
-            inAppPurchaseDoneFlow.value = InAppPurchaseState.Failure
-            Log.d("dwd", "launchInAppBillingFlow eturn 87")
-            return inAppPurchaseDoneFlow
-        }
-        //inAppPendingItems.add(productDetails.productId)
-        Log.d("dwd", "launchInAppBillingFlow 91 $sku")
-        val flowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(
-            listOf(
-                BillingFlowParams.ProductDetailsParams.newBuilder()
-                    .setProductDetails(productDetails).build()
-            )
-        )
-        billingClient?.launchBillingFlow(activity, flowParams.build())
-        return inAppPurchaseDoneFlow
+    private fun setProductDetails() {
+        Log.d("dwd", "InAppDetailsResponse ${inAppDetailsResponse.productDetails.size}")
+        Log.d("dwd", "InAppDetailsResponse SIZE ${inAppDetailsResponse.productDetails}")
+        Log.d("dwd", "RemoteSettings ${remotePackages}")
+
     }
 
     override suspend fun getPackageDetail(packageId: String): PackageDetails {
@@ -108,12 +91,38 @@ class GoogleBillingServiceImpl(
         return mapProductDetails(inAppDetailsResponse)[packageId] ?: PackageDetails.default()
     }
 
-    private suspend fun refreshDetails(){
+    override suspend fun getPackageDetails(): Map<String, PackageDetails> {
+        refreshDetails()
+        Log.d("dwd","InAppDetailsResponse SIZE ${inAppDetailsResponse.productDetails.size}")
+        Log.d("dwd","InAppDetailsResponse ${inAppDetailsResponse.productDetails}")
+        //Log.d("dwd","RemoteSettings ${remotePackages}")
+        return mapProductDetails(inAppDetailsResponse)
+    }
+
+
+    private fun parseSuccessState( //todo
+        packageDetailsResponse: PackageDetailsResponse
+    ): Map<String, PackageDetails> =
+        packageDetailsResponse.productDetails.map {
+            PackageDetails(
+                packageId = it.productId,
+                processStatus = PackageProcessStatus.PROCESSED,
+                price = getInAppPackagePricingPhase(it)?.formattedPrice.orEmpty(),
+                currencyCode = getInAppPackagePricingPhase(it)?.priceCurrencyCode.orEmpty(),
+                priceMicros = getInAppPackagePricingPhase(it)?.priceAmountMicros ?: 0L,
+                period = PERIOD_LIFETIME_SUFFIX,
+                name = it.name,
+                basePlanTags = it.subscriptionOfferDetails?.lastOrNull()?.offerTags.orEmpty(),
+            )
+        }.associateBy { it.packageId }
+
+    private suspend fun refreshDetails() {
         inAppDetailsResponse = fetchProductDetails()
     }
-    private suspend fun fetchProductDetails(): PackageDetailsResponse {////todo oooooo
+
+    private suspend fun fetchProductDetails(): PackageDetailsResponse {
         val productDetailsResult = billingClient?.queryProductDetails(initProductDetailsParams())
-        return when (productDetailsResult?.billingResult?.responseCode) {
+        return when (productDetailsResult?.billingResult?.responseCode) { ///todo Packages data from google
             BillingClient.BillingResponseCode.OK -> PackageDetailsResponse(
                 PackageDetailsStatus.Ok,
                 productDetailsResult.productDetailsList?.filter { it.productType == BillingClient.ProductType.INAPP }
@@ -138,35 +147,59 @@ class GoogleBillingServiceImpl(
         packageDetailsResponse: PackageDetailsResponse
     ): Map<String, PackageDetails> = when {
         packageDetailsResponse.packageDetailsStatus == PackageDetailsStatus.Error && packageDetailsResponse.productDetails.isEmpty() -> {
-            mapOf(FAKE_ID to PackageDetails(packageId = FAKE_ID, processStatus = PackageProcessStatus.UN_PROCESSED))
+            mapOf(
+                FAKE_ID to PackageDetails(
+                    packageId = FAKE_ID,
+                    processStatus = PackageProcessStatus.UN_PROCESSED
+                )
+            )
         }
+
         packageDetailsResponse.packageDetailsStatus == PackageDetailsStatus.Ok && packageDetailsResponse.productDetails.isEmpty() -> {
-            mapOf(FAKE_ID to PackageDetails(packageId = FAKE_ID, processStatus = PackageProcessStatus.PROCESSED))
+            mapOf(
+                FAKE_ID to PackageDetails(
+                    packageId = FAKE_ID,
+                    processStatus = PackageProcessStatus.PROCESSED
+                )
+            )
         }
+
         else -> parseSuccessState(packageDetailsResponse)
     }
 
-    private fun parseSuccessState(
-        packageDetailsResponse: PackageDetailsResponse
-    ): Map<String, PackageDetails> =
-        packageDetailsResponse.productDetails.map {
-            PackageDetails(
-                packageId = it.productId,
-                processStatus = PackageProcessStatus.PROCESSED,
-                price = getInAppPackagePricingPhase(it)?.formattedPrice.orEmpty(),
-                currencyCode = getInAppPackagePricingPhase(it)?.priceCurrencyCode.orEmpty(),
-                priceMicros = getInAppPackagePricingPhase(it)?.priceAmountMicros ?: 0L,
-                period = PERIOD_LIFETIME_SUFFIX,
-                basePlanTags = it.subscriptionOfferDetails?.lastOrNull()?.offerTags.orEmpty(),
-            )
-        }.associateBy { it.packageId }
 
     private fun getInAppPackagePricingPhase(productDetails: ProductDetails): ProductDetails.OneTimePurchaseOfferDetails? =
         productDetails.oneTimePurchaseOfferDetails
 
     override suspend fun consumePackage(token: String) {
         if (token.isNotEmpty()) {
-            billingClient?.consumePurchase(ConsumeParams.newBuilder().setPurchaseToken(token).build())
+            billingClient?.consumePurchase(
+                ConsumeParams.newBuilder().setPurchaseToken(token).build()
+            )
         }
+    }
+
+
+    override fun launchInAppBillingFlow(
+        activity: Activity,
+        sku: String
+    ): Flow<InAppPurchaseState> {
+        inAppPurchaseDoneFlow.value = InAppPurchaseState.Initial
+        val productDetails = inAppDetailsResponse.productDetails.find { it.productId == sku }
+        if (productDetails == null || !billingClient?.isReady.orFalse()) {
+            inAppPurchaseDoneFlow.value = InAppPurchaseState.Failure
+            Log.d("dwd", "launchInAppBillingFlow eturn 87")
+            return inAppPurchaseDoneFlow
+        }
+        //inAppPendingItems.add(productDetails.productId)
+        Log.d("dwd", "launchInAppBillingFlow 91 $sku")
+        val flowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(
+            listOf(
+                BillingFlowParams.ProductDetailsParams.newBuilder()
+                    .setProductDetails(productDetails).build()
+            )
+        )
+        billingClient?.launchBillingFlow(activity, flowParams.build())
+        return inAppPurchaseDoneFlow
     }
 }
