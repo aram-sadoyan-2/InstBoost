@@ -13,6 +13,9 @@ import com.ins.boostyou.model.response.UserData
 import com.ins.boostyou.model.response.UserMedia
 import com.ins.boostyou.model.response.UserMediaInfoList
 import com.ins.boostyou.model.response.UserState
+import com.ins.boostyou.model.response.boostyou.LikesPriceListModel
+import com.ins.boostyou.utils.logD
+import kotlin.math.log
 
 class InstMainRepoImpl(
     private val api: RetrofitPostServiceApi,
@@ -26,7 +29,7 @@ class InstMainRepoImpl(
         return try {
             val usrNme = userName ?: getUserNameFromPref()
             if (usrNme.isEmpty()) {
-                AppResult.Error(Exception("userName does not exists"))
+                return AppResult.Error(Exception("Username Does not exists"))
             }
             api.getPostDataFromNewJson(
                 userName = usrNme,
@@ -50,7 +53,7 @@ class InstMainRepoImpl(
                 AppResult.Error(Exception("empty data"))
             }
         } catch (e: Exception) {
-            Log.d("dwd", "getPostData Catch Error " + e.message)
+            Log.d("dwd", "getPostDataFromNewJson Catch Error " + e.message)
             AppResult.Error(e)
         }
     }
@@ -62,7 +65,6 @@ class InstMainRepoImpl(
     private fun getUserNameFromPref(): String {
         return FileDataUtils.getUsNameFromLocal(context)
     }
-
 
 
     private fun parseToUserData(response: InstPrData?): UserData {
@@ -97,6 +99,7 @@ class InstMainRepoImpl(
                 userMediaInfoList.add(
                     UserMediaInfoList(
                         id = node.id,
+                        postUrl = "https://www.instagram.com/p/" + node.shortcode,
                         displayUrl = node.displayUrl,
                         thumbnailSrcUrl = node.thumbnailSrc,
                         likeCount = node.edgeLikedBy.count,
@@ -117,5 +120,49 @@ class InstMainRepoImpl(
     }
 
 
+    override suspend fun requestLikePrices(): AppResult<LikesPriceListModel> {
+        return try {
+            val response = api.getLikePriceList()
+            if (response == null) {
+                AppResult.Error(Exception("empty data requestLikePrices"))
+            } else {
+                Log.d("dwd", "requestLikePrices $response")
+                handleSuccess(response)
+            }
+        } catch (e: Exception) {
+            Log.d("dwd", "requestLikePrices " + e.message)
+            AppResult.Error(e)
+        }
+    }
+
+    override suspend fun requestFollowerPrices(): AppResult<LikesPriceListModel> {
+        return try {
+            val response = api.getFollowerPriceList()
+            if (response == null) {
+                AppResult.Error(Exception("empty data requestFollowerPrices"))
+            } else {
+                Log.d("dwd", "requestFollowerPrices $response")
+                handleSuccess(response)
+            }
+        } catch (e: Exception) {
+            Log.d("dwd", "requestFollowerPrices " + e.message)
+            AppResult.Error(e)
+        }
+    }
+
+    override suspend fun requestCommentPrices(): AppResult<LikesPriceListModel> {
+        return try {
+            val response = api.getCommentPriceList()
+            if (response == null) {
+                AppResult.Error(Exception("empty data requestCommentPrices"))
+            } else {
+                logD("requestCommentPrices $response")
+                handleSuccess(response)
+            }
+        } catch (e: Exception) {
+            logD("requestCommentPrices" + e.message)
+            AppResult.Error(e)
+        }
+    }
 
 }

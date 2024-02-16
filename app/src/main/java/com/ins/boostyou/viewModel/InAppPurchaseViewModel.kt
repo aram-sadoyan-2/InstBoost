@@ -1,6 +1,9 @@
 package com.ins.boostyou.viewModel
 
 import android.app.Activity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ins.boostyou.billing.InstBoostPaymentService
@@ -8,6 +11,7 @@ import com.ins.boostyou.billing.data.InAppPurchaseResponse
 import com.ins.boostyou.billing.data.InAppValidateRequestBody
 import com.ins.boostyou.billing.data.PurchaseStatus
 import com.ins.boostyou.billing.domain.InAppPurchaseState
+import com.ins.boostyou.billing.domain.PackageDetails
 import com.ins.boostyou.module.ProfDispatchers
 import com.ins.boostyou.repository.InAppPaymentValidationRepo
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -23,18 +27,27 @@ class InAppPurchaseViewModel(
 
     private val _inAppPurchaseLiveData = MutableLiveData<InAppPurchaseResponse>()
     val inAppPurchaseLiveData: LiveData<InAppPurchaseResponse> = _inAppPurchaseLiveData
-    fun initialize(){
+
+    var packageDetails by mutableStateOf<Map<String, PackageDetails>?>(null)
+    fun initialize() {
         instBoostPaymentService.initialize()
     }
+
     fun launchInAppBillingFlow(activity: Activity, sku: String) = launchOnUI {
         val packageInfo = instBoostPaymentService.getPackageDetail(sku)
-        instBoostPaymentService.launchInAppBillingFlow(activity, sku).distinctUntilChanged().collect {
-                purchaseState ->
-            _inAppPurchaseStateLiveData.value =
-                when (purchaseState) {
-                    is InAppPurchaseState.Success -> purchaseState.copy(packageInfo = packageInfo)
-                    else -> purchaseState
-                }
+        instBoostPaymentService.launchInAppBillingFlow(activity, sku).distinctUntilChanged()
+            .collect { purchaseState ->
+                _inAppPurchaseStateLiveData.value =
+                    when (purchaseState) {
+                        is InAppPurchaseState.Success -> purchaseState.copy(packageInfo = packageInfo)
+                        else -> purchaseState
+                    }
+            }
+    }
+
+    fun getPackageDetails() {
+        launchOnBackground {
+            packageDetails = instBoostPaymentService.getPackageDetails()
         }
     }
 
@@ -50,7 +63,8 @@ class InAppPurchaseViewModel(
                     requestBody.packageId,
                     requestBody.token,
                     requestBody.priceAmountMicros,
-                    requestBody.currency)
+                    requestBody.currency
+                )
         }
     }
 

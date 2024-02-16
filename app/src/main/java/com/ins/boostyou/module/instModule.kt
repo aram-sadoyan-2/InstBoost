@@ -8,11 +8,14 @@ import com.ins.boostyou.repoimpl.InAppPaymentValidationRepoImpl
 import com.ins.boostyou.repository.InstMainRepo
 import com.ins.boostyou.viewModel.MainActivityViewModel
 import com.ins.boostyou.repoimpl.InstMainRepoImpl
+import com.ins.boostyou.repoimpl.PaymentActionRepoImpl
 import com.ins.boostyou.repoimpl.SignInUserRepoImpl
 import com.ins.boostyou.repository.InAppPaymentValidationRepo
+import com.ins.boostyou.repository.PaymentActionRepo
 import com.ins.boostyou.repository.SignInUserRepo
 import com.ins.boostyou.viewModel.ComposeNavigationViewModel
 import com.ins.boostyou.viewModel.InAppPurchaseViewModel
+import com.ins.boostyou.viewModel.PaymentActionsViewModel
 import com.ins.boostyou.viewModel.SignInUserViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -30,6 +33,10 @@ val instModule = module {
         InstMainRepoImpl(get(), get())
     }
 
+    factory<PaymentActionRepo> {
+        PaymentActionRepoImpl(ioDispatcher = Dispatchers.IO, get())
+    }
+
     factory<SignInUserRepo> {
         SignInUserRepoImpl(get(), get())
     }
@@ -38,7 +45,11 @@ val instModule = module {
 
 
     viewModel {
-        MainActivityViewModel(get(), get(), get())
+        MainActivityViewModel(get(), get(), get(), get())
+    }
+
+    viewModel {
+        PaymentActionsViewModel(get(), get())
     }
 
     viewModel {
@@ -52,6 +63,8 @@ val instModule = module {
     viewModel {
         ComposeNavigationViewModel(get())
     }
+
+
 
 
 }

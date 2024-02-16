@@ -2,35 +2,31 @@ package com.ins.boostyou.composable
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -40,23 +36,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.airbnb.lottie.LottieDrawable
-import com.airbnb.lottie.LottieDrawable.INFINITE
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.rememberLottieAnimatable
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ins.boostyou.R
 import com.ins.boostyou.model.response.UserMediaInfoList
+import com.ins.boostyou.viewModel.BaseViewModel.Companion.launchOnUI
 import com.ins.boostyou.viewModel.MainActivityViewModel
-import kotlinx.coroutines.coroutineScope
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -70,19 +62,38 @@ fun ImagesContainer(
         newList.add(0, null)
         newList.add(newList.lastIndex + 1, null)
 
+
+        LaunchedEffect(pagerState) {
+            // Collect from the a snapshotFlow reading the currentPage
+            snapshotFlow { pagerState.currentPage }.collect { page ->
+                mainActivityViewModel.setImageUrlToBoostYouRequest(page, newList)
+            }
+        }
+
         HorizontalPager(
             state = pagerState,
             pageSize = PageSize.Fixed(156.dp),
-            contentPadding = PaddingValues(start = 64.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
+            contentPadding = PaddingValues(start = 64.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
         ) {
-            SingleImage(item = newList[it], firstItem.value, it)
+            SingleImage(item = newList[it], firstItem.value, it, pagerState, onImageSelected = {
+                mainActivityViewModel.launchOnUI {
+                    pagerState.scrollToPage(it)
+                }
+            })
         }
     }
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SingleImage(item: UserMediaInfoList?, firstItem: Int, index: Int) {
+fun SingleImage(
+    item: UserMediaInfoList?,
+    firstItem: Int,
+    index: Int,
+    pagerState: PagerState,
+    onImageSelected: (Int) -> Unit
+) {
     if (item == null) {
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.swipe_animation))
         Column(
@@ -114,9 +125,12 @@ fun SingleImage(item: UserMediaInfoList?, firstItem: Int, index: Int) {
         }
     } else {
         Card(
-            modifier = if (firstItem == index) selectedCardView else cardViewModifier,
+            modifier = if (firstItem == index) selectedCardView else cardViewModifier
+                .clickable {
+                    onImageSelected(index)
+                },
             shape = RoundedCornerShape(24.dp),
-            colors = cardColors(containerColor = Color.White)
+            colors = cardColors(containerColor = Color.White),
         ) {
             AsyncImage(
                 model = item.displayUrl,

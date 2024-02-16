@@ -7,11 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface InstBoostPaymentService {
     fun initialize()
-
     fun launchInAppBillingFlow(activity: Activity, sku: String): Flow<InAppPurchaseState>
-
     suspend fun getPackageDetail(packageId: String): PackageDetails
-
+    suspend fun getPackageDetails(): Map<String, PackageDetails>
     suspend fun consumePackage(token: String)
-
 }

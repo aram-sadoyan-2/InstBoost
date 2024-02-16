@@ -27,27 +27,56 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ins.boostyou.R
-
+import com.ins.boostyou.constants.enum.AlertPopupType
+import com.ins.boostyou.model.request.BoostYouTaskRequest
+import com.ins.boostyou.model.response.boostyou.LikesPriceItem
+import com.ins.boostyou.viewModel.MainActivityViewModel
 
 @Preview
 @Composable
-fun LikesSection() {
+fun LikesSection(
+    viewModel: MainActivityViewModel,
+    selectedTab: Int,
+) {
     Column(
         Modifier
             .padding(bottom = 52.dp)
             .background(Color.White)
             .fillMaxHeight()
-            .verticalScroll(rememberScrollState()),) {
-        repeat(20) {
-            LikesSectionItem()
+            .verticalScroll(rememberScrollState()),
+    ) {
+        //todo refactor this sheet
+        if (selectedTab == 0) {
+            viewModel.likeCoast.data?.let { items ->
+                repeat(items.size) {
+                    LikesSectionItem(
+                        items[it],
+                        viewModel,
+                        qualityValue = 12
+                    )
+                }
+            }
+        } else if (selectedTab == 1) {
+            viewModel.goldLikeCoast.data?.let { items ->
+                repeat(items.size) {
+                    LikesSectionItem(
+                        items[it],
+                        viewModel,
+                        qualityValue = 31
+                    )
+                }
+            }
         }
 
     }
 }
 
-@Preview
 @Composable
-fun LikesSectionItem() {
+fun LikesSectionItem(
+    item: LikesPriceItem,
+    mainActivityViewModel: MainActivityViewModel,
+    qualityValue: Int
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -62,14 +91,26 @@ fun LikesSectionItem() {
             Modifier.size(32.dp, 32.dp)
         )
         Text(text = "X", Modifier.padding(horizontal = 16.dp), textAlign = TextAlign.Center)
-        Text(text = "200",
+        Text(
+            text = item.count.toString(),
             modifier = Modifier.weight(1f),
             style = TextStyle(
                 fontSize = 18.sp
             )
         )
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                mainActivityViewModel.boostYouTaskRequest.apply {
+                    taskType = 1
+                    quality = qualityValue
+                    //count = item.count // todo send 1 for test
+                    count = 1 // todo send 1 for test
+                }
+
+                mainActivityViewModel.showPopupType =
+                    if (mainActivityViewModel.userInfo.coinsCount < item.count) AlertPopupType.NO_ENOUGH_COIN else AlertPopupType.LIKE
+
+            },
             modifier = Modifier.height(30.dp),
             shape = RoundedCornerShape(4.dp),
             border = BorderStroke(1.dp, Color(0XFF6A698D)),
@@ -79,7 +120,7 @@ fun LikesSectionItem() {
             )
         ) {
             Text(
-                text = "99.99$", style = TextStyle(
+                text = item.price.toString(), style = TextStyle(
                     fontSize = 13.sp
                 )
             )
