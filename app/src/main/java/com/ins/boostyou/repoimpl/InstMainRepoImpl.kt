@@ -45,7 +45,8 @@ class InstMainRepoImpl(
                     !userData.id.isNullOrBlank() &&
                     !userData.userName.isNullOrBlank()
                 ) {
-                    FileDataUtils.saveUsNmAndId(context, userData.id, userData.userName)
+                    //FileDataUtils.saveUsNmAndId(context, userData.id, userData.userName)
+                    FileDataUtils.saveUserNameToList(context, userData.userName)
                 }
                 handleSuccess(userData)
             } ?: run {
@@ -63,7 +64,7 @@ class InstMainRepoImpl(
     }
 
     private fun getUserNameFromPref(): String {
-        return FileDataUtils.getUsNameFromLocal(context)
+        return FileDataUtils.getUserNameList(context)?.last().orEmpty()
     }
 
 

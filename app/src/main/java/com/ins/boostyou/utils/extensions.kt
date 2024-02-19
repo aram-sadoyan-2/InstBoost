@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import com.google.android.datatransport.runtime.logging.Logging.d
+import org.koin.core.component.getScopeName
 
 fun Boolean?.orFalse() = this ?: false
 
@@ -36,6 +37,6 @@ inline fun Modifier.noRippleClickable(crossinline onClick: () -> Unit): Modifier
     }
 }
 
-fun logD(value: String) {
-    Log.d("dwd",value)
+fun logD(value: Any?) {
+    Log.d("dwd", value.toString())
 }

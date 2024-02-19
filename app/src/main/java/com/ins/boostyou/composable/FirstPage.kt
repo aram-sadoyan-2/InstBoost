@@ -1,6 +1,8 @@
 package com.ins.boostyou.composable
 
+import android.health.connect.datatypes.units.Length
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +10,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.ins.boostyou.constants.enum.AlertPopupType
 import com.ins.boostyou.model.response.UserState
@@ -21,34 +24,50 @@ fun FistPage(
     mainActivityViewModel: MainActivityViewModel,
     inAppPurchaseViewModel: InAppPurchaseViewModel,
 ) {
-   // val coroutineScope = rememberCoroutineScope()
+    // val coroutineScope = rememberCoroutineScope()
     when (mainActivityViewModel.showPopupType) {
         AlertPopupType.LIKE,
-        AlertPopupType.FOLLOWER,
-        AlertPopupType.COMMENT -> {
+        AlertPopupType.FOLLOWER -> {
             AlertDialogSample(viewModel = mainActivityViewModel,
-                title = "Confirm ${mainActivityViewModel.showPopupType.name} Promotion",
-                subTitle = "Promote Like Subtitle",
+                title = "Confirm ${mainActivityViewModel.showPopupType.extension} Promotion",
                 onDismissRequest = {
                     mainActivityViewModel.showPopupType = AlertPopupType.NONE
                 },
                 onConfirmation = {
-                    Log.d("dwd","OnConfirmation for ${mainActivityViewModel.showPopupType.name}")
+                    Log.d("dwd", "OnConfirmation for ${mainActivityViewModel.showPopupType.name}")
                     mainActivityViewModel.requestTask()
                     mainActivityViewModel.showPopupType = AlertPopupType.NONE
                 })
         }
-        AlertPopupType.NO_ENOUGH_COIN -> {
-            inAppPurchaseViewModel.getPackageDetails()
-            PaymentPurchaseDialogNew(inAppPurchaseViewModel,
+
+        AlertPopupType.COMMENT -> {
+            CreateCommentsDialog(inAppPurchaseViewModel,
                 onDismissRequest = {
                     mainActivityViewModel.showPopupType = AlertPopupType.NONE
                 },
                 onConfirmation = {
 
+                })
+        }
+
+        AlertPopupType.NO_ENOUGH_COIN -> {
+            inAppPurchaseViewModel.getPackageDetails()
+            PaymentPurchaseDialog(inAppPurchaseViewModel,
+                onDismissRequest = {
+                    mainActivityViewModel.showPopupType = AlertPopupType.NONE
+                },
+                onConfirmation = {
                 }
             )
         }
+
+        AlertPopupType.NO_IMAGE_SELECTED -> {
+            val context = LocalContext.current
+            Toast.makeText(context, mainActivityViewModel.showPopupType.extension, Toast.LENGTH_SHORT)
+                .show()
+            mainActivityViewModel.showPopupType = AlertPopupType.NONE
+        }
+
         else -> {}
     }
 

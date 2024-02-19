@@ -1,5 +1,6 @@
 package com.ins.boostyou.composable
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -66,6 +67,7 @@ fun ImagesContainer(
         LaunchedEffect(pagerState) {
             // Collect from the a snapshotFlow reading the currentPage
             snapshotFlow { pagerState.currentPage }.collect { page ->
+                Log.d("dwd", "setImageUrlToBoostYouRequest $page")
                 mainActivityViewModel.setImageUrlToBoostYouRequest(page, newList)
             }
         }
