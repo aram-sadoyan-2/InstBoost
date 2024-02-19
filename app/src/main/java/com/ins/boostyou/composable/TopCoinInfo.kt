@@ -32,7 +32,7 @@ fun TopCoinInfo(
     var isBuyCoinsSelected by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     if (isBuyCoinsSelected) {
-        PaymentPurchaseDialogNew(inAppPurchaseViewModel,
+        PaymentPurchaseDialog(inAppPurchaseViewModel,
             onDismissRequest = {
                 isBuyCoinsSelected = false
             },
@@ -54,19 +54,19 @@ fun TopCoinInfo(
             }
     ) {
         Text(
-            text = "@" + mainActivityViewModel.userData.userName.orEmpty(),
+            text = if (mainActivityViewModel.userData.userName.orEmpty().isNotEmpty()) "@" + mainActivityViewModel.userData.userName.orEmpty() else "",
             modifier = Modifier.padding(end = 12.dp)
         )
         Image(
-            painter = painterResource(id = R.drawable.ic_hear_red),
+            painter = painterResource(id = R.drawable.ic_coin),
             contentDescription = "",
             Modifier
-                .size(16.dp, 16.dp)
+                .size(26.dp, 26.dp)
                 .padding(top = 2.dp)
         )
         Text(
             text = mainActivityViewModel.userInfo.coinsCount.toString(),
-            Modifier.padding(horizontal = 8.dp),
+            Modifier.padding(vertical = 4.dp).padding(start = 4.dp, end = 12.dp),
             textAlign = TextAlign.Center
         )
     }

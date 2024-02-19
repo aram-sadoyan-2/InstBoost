@@ -98,16 +98,6 @@ interface RetrofitPostServiceApi {
         @Header("action") action: String? = "getCommentPriceList",
     ): LikesPriceListModel?
 
-    @POST("/apiV2.php")
-    suspend fun requestBoostTask(
-        @Header("action") action: String? = "boostyouRequest",
-        @Field("user_name") userName: String,
-        @Field("task_typ") taskType: String,
-        @Field("type") type: String,
-        @Field("count") count: Int,
-        @Field("price") price: Double,
-        @Field("service_url") serviceUrl: String,
-    ): Any?
 
     @POST("/apiV2.php")
     suspend fun subTrackUserCoinsIfSpent(
@@ -127,11 +117,9 @@ interface RetrofitPostServiceApi {
         @Field("service_url") serviceUrl: String? = null,
         @Field("quality") quality: Int? = null,
         @Field("count") count: Int? = null,
+        @Field("user_name") userName: String? = null,
         @Field("comments") comments: List<String>? = null
     ): BaseResponse?
-
-
-
 
 
 

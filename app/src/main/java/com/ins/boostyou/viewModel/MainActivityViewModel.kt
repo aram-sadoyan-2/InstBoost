@@ -24,8 +24,6 @@ import com.ins.boostyou.model.response.UserMediaInfoList
 import com.ins.boostyou.model.response.boostyou.LikesPriceItem
 import com.ins.boostyou.model.response.boostyou.LikesPriceListModel
 import com.ins.boostyou.repository.PaymentActionRepo
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 class MainActivityViewModel(
     private var instMainRepo: InstMainRepo,
@@ -41,9 +39,6 @@ class MainActivityViewModel(
     var goldFollowerCoast by mutableStateOf(LikesPriceListModel())
     var goldLikeCoast by mutableStateOf(LikesPriceListModel())
     var commentsCoast by mutableStateOf(LikesPriceListModel())
-
-    //private val _taskResultData = MutableStateFlow<BaseResponse?>(null)
-    //val taskResultData = _taskResultData.asStateFlow()
 
     var boostYouTaskRequest = BoostYouTaskRequest()
     var taskResultData by mutableStateOf(BaseResponse())
@@ -78,7 +73,6 @@ class MainActivityViewModel(
                 )
             })
 
-
         when (val result = instMainRepo.requestFollowerPrices()) {
             is AppResult.Success -> followerCoast = result.successData
             else -> {}
@@ -91,7 +85,6 @@ class MainActivityViewModel(
                     ), price = it.price?.times(2)
                 )
             })
-
 
         when (val result = instMainRepo.requestCommentPrices()) {
             is AppResult.Success -> commentsCoast = result.successData
@@ -125,13 +118,13 @@ class MainActivityViewModel(
         when (val result = instMainRepo.getPostDataFromNewJson(userName, saveUserName)) {
             is AppResult.Success -> {
                 userData = result.successData
+                boostYouTaskRequest.userName = userData.userName
                 if (showLoading == true) {
                     loadingState = null
                 }
             }
 
             else -> {
-
                 if (showLoading == true) {
                     loadingState = null
                 }
@@ -173,14 +166,13 @@ class MainActivityViewModel(
         if (Looper.getMainLooper() == Looper.myLooper()) this.value = value else postValue(value)
 
 
-
     fun requestTask() {
-        Log.d("dwd","TaskResultData $boostYouTaskRequest")
+        Log.d("dwd", "TaskResultData $boostYouTaskRequest")
         launchOnBackground {
-          //  repo.requestTask(boostYouTaskRequest).collect {
-               // taskResultData = it
-              //  Log.d("dwd","TaskResultData $it")
-         //   }
+           // repo.requestTask(boostYouTaskRequest).collect {
+               //  taskResultData = it
+                //  Log.d("dwd","TaskResultData $it")
+          //  }
         }
     }
 
@@ -188,7 +180,6 @@ class MainActivityViewModel(
         page: Int,
         userMediaInfoList: MutableList<UserMediaInfoList?>
     ) {
-        Log.d("dwd", "dwdqwdq $page $userMediaInfoList")
         when (page) {
             0 -> boostYouTaskRequest.serviceUrl = null
             else -> boostYouTaskRequest.serviceUrl = userMediaInfoList[page]?.postUrl

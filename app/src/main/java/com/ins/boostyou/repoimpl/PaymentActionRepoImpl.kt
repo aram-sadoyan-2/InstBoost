@@ -21,6 +21,7 @@ class PaymentActionRepoImpl(
                 serviceUrl = requestBody.serviceUrl,
                 quality = requestBody.quality,
                 count = requestBody.count,
+                userName = requestBody.userName,
                 comments = requestBody.comments,
             )
             response?.let {
@@ -40,4 +41,5 @@ class PaymentActionRepoImpl(
             emit(BaseResponse(message = e.message))
         }
     }.flowOn(ioDispatcher)
+
 }

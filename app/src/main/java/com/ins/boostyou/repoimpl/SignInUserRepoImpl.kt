@@ -34,7 +34,7 @@ class SignInUserRepoImpl(
             val response = api.createUserIfNotExist()
             response?.let {
                 when (it.status) {
-                    "done" -> {
+                    "ok" -> {
                         UserRegisterStatus.USER_CREATED
                     }
                     "user_exist" -> UserRegisterStatus.USER_EXISTS

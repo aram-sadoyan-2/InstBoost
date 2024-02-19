@@ -67,10 +67,12 @@ fun NavigationBar(
         selectedIcon = Icons.Filled.Notifications,
         unselectedIcon = Icons.Outlined.Notifications
     )
-    val settingsTab = TabBarItem(
+    val commentsTab = TabBarItem(
         title = "Comments",
         selectedIcon = Icons.Filled.Settings,
-        unselectedIcon = Icons.Outlined.Settings
+        unselectedIcon = Icons.Outlined.Settings,
+        selectedPainter = R.drawable.ic_comment_filled,
+        unselectedPainter = R.drawable.ic_comment_outlined
     )
     val moreTab = TabBarItem(
         title = "Settings",
@@ -78,10 +80,8 @@ fun NavigationBar(
         unselectedIcon = Icons.Outlined.List
     )
     // creating a list of all the tabs
-    val tabBarItems = listOf(homeTab, alertsTab, settingsTab, moreTab)
+    val tabBarItems = listOf(homeTab, alertsTab, commentsTab, moreTab)
 
-    //InstBoostTheme {
-    // A surface container using the 'background' color from the theme
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -96,7 +96,6 @@ fun NavigationBar(
             )
         }
     }
-    // }
 }
 
 @Composable
