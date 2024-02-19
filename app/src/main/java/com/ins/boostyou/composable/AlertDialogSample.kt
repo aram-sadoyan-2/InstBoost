@@ -13,7 +13,6 @@ import com.ins.boostyou.viewModel.MainActivityViewModel
 fun AlertDialogSample(
     viewModel: MainActivityViewModel,
     title: String = "",
-    subTitle: String = "",
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit
 ) {
@@ -25,9 +24,6 @@ fun AlertDialogSample(
                 },
                 title = {
                     Text(text = title)
-                },
-                text = {
-                    Text(subTitle)
                 },
                 confirmButton = {
                     Button(
