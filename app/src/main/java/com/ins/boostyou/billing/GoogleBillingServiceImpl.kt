@@ -66,13 +66,13 @@ class GoogleBillingServiceImpl(
     override fun onBillingSetupFinished(billingResult: BillingResult) {
         coroutineScope.launch {
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                 //remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
-                remotePackages = mutableListOf(
-                    RemotePackageItem(packageId = "android.test.purchased", name = "Buy 20 Coins"),
-                    RemotePackageItem(packageId = "android.test.canceled", name = "Buy 1000 Coins"),
-                    RemotePackageItem(packageId = "com.boost.coin30", name = "Buy 30 Coins"),
-                    RemotePackageItem(packageId = "coin_100", name = "Buy 10 Coins"),
-                )
+                remotePackages = remoteSettings.getRemoteSettings()?.toMutableList()
+//                remotePackages = mutableListOf(
+//                    RemotePackageItem(packageId = "android.test.purchased", name = "Buy 20 Coins" , count = 20),
+//                    RemotePackageItem(packageId = "android.test.canceled", name = "Buy 1000 Coins", count = 1000),
+//                    RemotePackageItem(packageId = "com.boost.coin30", name = "Buy 30 Coins", count = 30),
+//                    RemotePackageItem(packageId = "coin_100", name = "Buy 10 Coins", count = 10),
+//                )
                 refreshDetails()
                 setProductDetails()
             }
@@ -108,6 +108,7 @@ class GoogleBillingServiceImpl(
                 packageId = it.productId,
                 processStatus = PackageProcessStatus.PROCESSED,
                 price = getInAppPackagePricingPhase(it)?.formattedPrice.orEmpty(),
+               // count = ,
                 currencyCode = getInAppPackagePricingPhase(it)?.priceCurrencyCode.orEmpty(),
                 priceMicros = getInAppPackagePricingPhase(it)?.priceAmountMicros ?: 0L,
                 period = PERIOD_LIFETIME_SUFFIX,

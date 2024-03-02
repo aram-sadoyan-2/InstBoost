@@ -6,6 +6,7 @@ data class PackageDetails(
     val period: String = "P1M",
     val introductoryPrice: String = "",
     val price: String = "",
+    val count: Int = 0,
     val currencyCode: String = "USD",
     val priceMicros: Long = 0L,
     val name: String = "",
