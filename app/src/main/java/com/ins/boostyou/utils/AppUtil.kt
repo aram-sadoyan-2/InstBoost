@@ -13,5 +13,6 @@ fun extractCodeFromJsonUrl(url: String): String {
         // URL-decode the code
         return URLDecoder.decode(encodedCode, "UTF-8")
     }
+
     return ""
 }
