@@ -1,7 +1,8 @@
 package com.ins.boostyou.viewModel
 
-import android.os.Looper
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,9 +16,9 @@ import com.ins.boostyou.model.response.UserState
 import com.ins.boostyou.model.response.boostyou.UserInfo
 import com.ins.boostyou.repository.SignInUserRepo
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.gestures.DraggableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.ins.boostyou.controller.FileDataUtils
 import com.ins.boostyou.model.request.BoostYouTaskRequest
 import com.ins.boostyou.model.response.BaseResponse
 import com.ins.boostyou.model.response.UserMediaInfoList
@@ -92,16 +93,22 @@ class MainActivityViewModel(
         }
     }
 
-    private suspend fun requestUserInfo() {
+    private suspend fun requestUserInfo(hideLoading: Boolean? = false) {
         signInUserRepo.getUserInfo().apply {
             when (this) {
                 is AppResult.Success -> {
                     Log.d("dwd", "requestUserInfo ---- $successData")
                     userInfo = successData
+                    if (hideLoading == true) {
+                        loadingState = LoadingState.DONE_ICON
+                    }
                 }
 
                 is AppResult.Error -> {
                     Log.d("dwd", "requestUserInfo Error")
+                    if (hideLoading == true) {
+                        loadingState = null
+                    }
                 }
             }
         }
@@ -118,13 +125,14 @@ class MainActivityViewModel(
         when (val result = instMainRepo.getPostDataFromNewJson(userName, saveUserName)) {
             is AppResult.Success -> {
                 userData = result.successData
-                boostYouTaskRequest.userName = userData.userName
+                boostYouTaskRequest = BoostYouTaskRequest(userName = userData.userName)
                 if (showLoading == true) {
                     loadingState = null
                 }
             }
 
             else -> {
+                boostYouTaskRequest = BoostYouTaskRequest()
                 if (showLoading == true) {
                     loadingState = null
                 }
@@ -132,9 +140,8 @@ class MainActivityViewModel(
         }
     }
 
-    suspend fun logOut() {
+    fun logOut() {
         userData = UserData(userState = UserState.DOES_NOT_EXIST)
-        //todo move to signinRepo
         instMainRepo.logOutUser()
     }
 
@@ -142,38 +149,59 @@ class MainActivityViewModel(
     val tabIndex: LiveData<Int> = _tabIndex
     val tabs = listOf("Simple", "Gold")
 
-    var isSwipeToTheLeft: Boolean = false
-    private val draggableState = DraggableState { delta ->
-        isSwipeToTheLeft = delta > 0
-    }
+//    var isSwipeToTheLeft: Boolean = false
+//    private val draggableState = DraggableState { delta ->
+//        isSwipeToTheLeft = delta > 0
+    //  }
 
-    private val _dragState = MutableLiveData(draggableState)
-    val dragState: LiveData<DraggableState> = _dragState
+//    private val _dragState = MutableLiveData(draggableState)
+//    val dragState: LiveData<DraggableState> = _dragState
+//
+//    fun updateTabIndexBasedOnSwipe() {
+//        _tabIndex.value = when (isSwipeToTheLeft) {
+//            true -> Math.floorMod(_tabIndex.value!!.plus(1), tabs.size)
+//            false -> Math.floorMod(_tabIndex.value!!.minus(1), tabs.size)
+//        }
+//    }
+//
+//    fun updateTabIndex(i: Int) {
+//        _tabIndex.value = i
+//    }
+//
+//
+//    private fun <T> MutableLiveData<T>.setValueSafe(value: T?) =
+//        if (Looper.getMainLooper() == Looper.myLooper()) this.value = value else postValue(value)
 
-    fun updateTabIndexBasedOnSwipe() {
-        _tabIndex.value = when (isSwipeToTheLeft) {
-            true -> Math.floorMod(_tabIndex.value!!.plus(1), tabs.size)
-            false -> Math.floorMod(_tabIndex.value!!.minus(1), tabs.size)
-        }
-    }
 
-    fun updateTabIndex(i: Int) {
-        _tabIndex.value = i
-    }
-
-
-    private fun <T> MutableLiveData<T>.setValueSafe(value: T?) =
-        if (Looper.getMainLooper() == Looper.myLooper()) this.value = value else postValue(value)
-
-
-    fun requestTask() {
+    fun requestTask(context: Context) {
         Log.d("dwd", "TaskResultData $boostYouTaskRequest")
-        launchOnBackground {
-           // repo.requestTask(boostYouTaskRequest).collect {
-               //  taskResultData = it
-                //  Log.d("dwd","TaskResultData $it")
-          //  }
+        viewModelScope.launch {
+            loadingState = LoadingState.LOADING
+            Log.d("dwd","180")
+            requestUserInfo()
+            Log.d("dwd","181")
+
+            repo.requestTask(boostYouTaskRequest, userInfo).collect {
+                when (it.status) {
+                    "ok" -> {
+                        requestUserInfo(hideLoading = true)
+                    }
+                    "error" -> {
+                        loadingState = null
+                        Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        loadingState = null
+                        Toast.makeText(context, "error", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
+    }
+
+    fun getUserListSize(context: Context) = FileDataUtils.getUserNameList(context)?.size ?: 0
+    fun removeCurrentAccount(context: Context) {
+        userData.userName?.let { FileDataUtils.removeAccountFromSavedList(it, context) }
     }
 
     fun setImageUrlToBoostYouRequest(

@@ -1,7 +1,10 @@
 package com.ins.boostyou
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import com.ins.boostyou.composable.NavigationBar
 import com.ins.boostyou.viewModel.ComposeNavigationViewModel
@@ -16,6 +19,14 @@ class TestActivity : ComponentActivity() {
     private val mainActivityViewModel: MainActivityViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        onBackPressedDispatcher.addCallback(
+            this ,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+
+                }
+
+            })
         inAppPurchaseViewModel.initialize()
         setContent {
             NavigationBar(
@@ -23,8 +34,10 @@ class TestActivity : ComponentActivity() {
                 composeNavigationViewModel,
                 mainActivityViewModel,
 
-            )
+                )
         }
     }
+
+
 }
 

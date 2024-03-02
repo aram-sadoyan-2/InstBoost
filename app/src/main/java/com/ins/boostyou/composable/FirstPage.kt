@@ -1,6 +1,7 @@
+@file:Suppress("NAME_SHADOWING")
+
 package com.ins.boostyou.composable
 
-import android.health.connect.datatypes.units.Length
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -24,18 +25,31 @@ fun FistPage(
     mainActivityViewModel: MainActivityViewModel,
     inAppPurchaseViewModel: InAppPurchaseViewModel,
 ) {
-    // val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     when (mainActivityViewModel.showPopupType) {
+        AlertPopupType.REMOVE_ACCOUNT -> {
+            AlertDialogSample(viewModel = mainActivityViewModel,
+                title = "Are You Sure?",
+                onDismissRequest = {
+                    mainActivityViewModel.showPopupType = AlertPopupType.NONE
+                },
+                onConfirmation = {
+                    mainActivityViewModel.removeCurrentAccount(context)
+                    mainActivityViewModel.logOut()
+                    composeNavigationViewModel.selectedTabItem = 0
+                })
+        }
+
         AlertPopupType.LIKE,
         AlertPopupType.FOLLOWER -> {
             AlertDialogSample(viewModel = mainActivityViewModel,
-                title = "Confirm ${mainActivityViewModel.showPopupType.extension} Promotion",
+                title = "Confirm ${mainActivityViewModel.boostYouTaskRequest.count} ${mainActivityViewModel.showPopupType.extension} Promotion",
                 onDismissRequest = {
                     mainActivityViewModel.showPopupType = AlertPopupType.NONE
                 },
                 onConfirmation = {
                     Log.d("dwd", "OnConfirmation for ${mainActivityViewModel.showPopupType.name}")
-                    mainActivityViewModel.requestTask()
+                    mainActivityViewModel.requestTask(context)
                     mainActivityViewModel.showPopupType = AlertPopupType.NONE
                 })
         }
@@ -46,7 +60,9 @@ fun FistPage(
                     mainActivityViewModel.showPopupType = AlertPopupType.NONE
                 },
                 onConfirmation = {
-
+                    Log.d("dwd", "Comment Confirm $it")
+                    mainActivityViewModel.boostYouTaskRequest.comments = it
+                    mainActivityViewModel.requestTask(context)
                 })
         }
 
@@ -63,16 +79,20 @@ fun FistPage(
 
         AlertPopupType.NO_IMAGE_SELECTED -> {
             val context = LocalContext.current
-            Toast.makeText(context, mainActivityViewModel.showPopupType.extension, Toast.LENGTH_SHORT)
+            Toast.makeText(
+                context,
+                mainActivityViewModel.showPopupType.extension,
+                Toast.LENGTH_SHORT
+            )
                 .show()
             mainActivityViewModel.showPopupType = AlertPopupType.NONE
         }
 
         else -> {}
     }
-
     when {
         mainActivityViewModel.isLoading() -> LoadingView()
+        mainActivityViewModel.isDoneIcon() -> DoneIconComposable(mainActivityViewModel = mainActivityViewModel)
         else -> {
             when (composeNavigationViewModel.selectedTabItem) {
                 3 -> {
@@ -91,14 +111,16 @@ fun FistPage(
                     ) {
                         TopCoinInfo(mainActivityViewModel, inAppPurchaseViewModel)
                         if (mainActivityViewModel.userData.userState == UserState.SIGNED_IN) {
-                            UserMainInfoSection(composeNavigationViewModel, mainActivityViewModel)
+                            UserMainInfoSection(mainActivityViewModel)
                         } else {
                             UserNameInputSection(mainActivityViewModel)
                         }
                         Divider(thickness = 1.dp, color = Color(0xFFD9DDE1))
                         if (composeNavigationViewModel.selectedTabItem == 1) {
                             SelectedFollowersSection(mainActivityViewModel = mainActivityViewModel)
-                        } else {
+                        } else if (mainActivityViewModel.userData.userMedia != null
+                            && mainActivityViewModel.userData.userMedia?.userMediaInfoList?.size != 0
+                        ) {
                             ImagesContainer(mainActivityViewModel = mainActivityViewModel)
                         }
                         Divider(thickness = 1.dp, color = Color(0xFFD9DDE1))

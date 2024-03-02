@@ -1,8 +1,6 @@
 package com.ins.boostyou.composable
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,12 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.ins.boostyou.viewModel.ComposeNavigationViewModel
 import com.ins.boostyou.viewModel.MainActivityViewModel
 
 @Composable
 fun UserMainInfoSection(
-    composeNavigationViewModel: ComposeNavigationViewModel,
     mainActivityViewModel: MainActivityViewModel
 ) {
     Box {
@@ -41,7 +37,6 @@ private fun UserInfoSection(mainActivityViewModel: MainActivityViewModel) {
             .background(Color.White),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-
         Card(
             shape = RoundedCornerShape(72.dp),
             modifier = Modifier.padding(start = 12.dp, bottom = 12.dp)
@@ -60,17 +55,17 @@ private fun UserInfoSection(mainActivityViewModel: MainActivityViewModel) {
                 .padding(end = 12.dp, start = 32.dp)
         ) {
             FollowersCount(
-                "posts",
+                "Posts",
                 mainActivityViewModel.userData.userMedia?.userMediaInfoList?.size?.toLong(),
                 modifier = Modifier.weight(1f)
             )
             FollowersCount(
-                "followers",
+                "Followers",
                 mainActivityViewModel.userData.followedByCount,
                 modifier = Modifier.weight(1f)
             )
             FollowersCount(
-                "following",
+                "Following",
                 mainActivityViewModel.userData.followingCount,
                 modifier = Modifier.weight(1f)
             )

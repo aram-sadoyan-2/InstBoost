@@ -4,6 +4,7 @@ import android.util.Log
 import com.ins.boostyou.api.RetrofitPostServiceApi
 import com.ins.boostyou.model.request.BoostYouTaskRequest
 import com.ins.boostyou.model.response.BaseResponse
+import com.ins.boostyou.model.response.boostyou.UserInfo
 import com.ins.boostyou.repository.PaymentActionRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flow
@@ -14,8 +15,9 @@ class PaymentActionRepoImpl(
     private val apiService: RetrofitPostServiceApi
 ) : PaymentActionRepo {
 
-    override fun requestTask(requestBody: BoostYouTaskRequest) = flow {
+    override fun requestTask(requestBody: BoostYouTaskRequest, userInfo: UserInfo) = flow {
         try {
+          //  if (userInfo.coinsCount >= requestBody.price)
             val response = apiService.requestTask(
                 taskType = requestBody.taskType,
                 serviceUrl = requestBody.serviceUrl,
@@ -23,16 +25,10 @@ class PaymentActionRepoImpl(
                 count = requestBody.count,
                 userName = requestBody.userName,
                 comments = requestBody.comments,
+                price = requestBody.price
             )
             response?.let {
-                when (it.status) {
-                    "success" -> {
-                        emit(
-                            it
-                        )
-                    }
-                    else -> emit(it)
-                }
+                emit(it)
             } ?: run {
                 emit(BaseResponse(message = "response is null"))
             }

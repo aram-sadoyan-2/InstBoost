@@ -65,7 +65,9 @@ fun NavigationBar(
     val alertsTab = TabBarItem(
         title = "Followers",
         selectedIcon = Icons.Filled.Notifications,
-        unselectedIcon = Icons.Outlined.Notifications
+        unselectedIcon = Icons.Outlined.Notifications,
+        selectedPainter = R.drawable.ic_add_follower_outlined,
+        unselectedPainter = R.drawable.ic_add_follower_outlined
     )
     val commentsTab = TabBarItem(
         title = "Comments",

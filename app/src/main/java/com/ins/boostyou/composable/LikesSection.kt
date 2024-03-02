@@ -107,47 +107,20 @@ fun LikesSectionItem(
                 fontSize = 18.sp
             )
         )
-//        Button(
-//            onClick = {
-//                mainActivityViewModel.boostYouTaskRequest.apply {
-//                    taskType = 1
-//                    quality = qualityValue
-//                    //count = item.count // todo send 1 for test
-//                    count = 1 // todo send 1 for test
-//                }
-//
-//                mainActivityViewModel.showPopupType =
-//                    if (mainActivityViewModel.userInfo.coinsCount < item.count) AlertPopupType.NO_ENOUGH_COIN else AlertPopupType.LIKE
-//
-//            },
-//            modifier = Modifier
-//                .height(30.dp)
-//                .padding(end = 22.dp),
-//            shape = RoundedCornerShape(4.dp),
-//            border = BorderStroke(1.dp, Color(0XFF6A698D)),
-//            colors = ButtonDefaults.buttonColors(
-//                contentColor = Color(0XFF6A698D),
-//                containerColor = Color.White
-//            )
-//        ) {
-//            Text(
-//                text = item.price.toString(), style = TextStyle(
-//                    fontSize = 13.sp
-//                )
-//            )
-//        }
 
         Row(
             Modifier
                 .width(width = 88.dp)
-                .clip(shape = RoundedCornerShape(4.dp))
-                .border(BorderStroke(2.dp, Color(0xFFF05161)))
+                .clip(shape = RoundedCornerShape(2.dp))
+                .border(BorderStroke(2.dp, Color(0xFFE06B77)))
                 .padding(horizontal = 12.dp, vertical = 8.dp)
                 .clickable {
                     mainActivityViewModel.boostYouTaskRequest.apply {
                         taskType = 1
                         quality = qualityValue
                         count = item.count
+                        price = item.price
+                        comments = null
                     }
                     if (mainActivityViewModel.boostYouTaskRequest.serviceUrl.isNullOrEmpty()) {
                         mainActivityViewModel.showPopupType = AlertPopupType.NO_IMAGE_SELECTED
@@ -159,7 +132,6 @@ fun LikesSectionItem(
                 },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
-            // .background(color = Color.Gray),
         ) {
             Image(
                 modifier = Modifier

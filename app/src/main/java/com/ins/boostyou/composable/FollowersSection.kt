@@ -105,6 +105,8 @@ fun FollowersSectionItem(
                         taskType = 3
                         quality = qualityValue
                         count = item.count
+                        price = item.price
+                        comments = null
                         serviceUrl = "https://www.instagram.com/" + mainActivityViewModel.userData.userName
                     }
 

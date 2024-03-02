@@ -1,8 +1,8 @@
 package com.ins.boostyou.composable
 
-import android.util.Log
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,15 +20,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContextCompat.startActivity
 import com.ins.boostyou.utils.findActivity
 import com.ins.boostyou.viewModel.InAppPurchaseViewModel
+
 
 @Composable
 fun PaymentPurchaseDialog(
@@ -61,30 +65,39 @@ fun PaymentPurchaseDialog(
                         ) {
                             items(packageDetails) { packageDetail ->
                                 Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
                                     modifier = Modifier
-                                        .border(
-                                            border = BorderStroke(
-                                                1.dp,
-                                                Color.Black
-                                            ), shape = RoundedCornerShape(32)
-                                        )
                                         .fillMaxWidth()
+                                        .clip(RoundedCornerShape(34.dp))
+                                        .background(Color(0xFFF06B78))
                                         .clickable {
                                             inAppPurchaseViewModel.launchInAppBillingFlow(
                                                 activity,
                                                 packageDetail.packageId
                                             )
                                         }
-                                        .padding(horizontal = 22.dp, vertical = 16.dp)
                                 ) {
-                                    Text(text = packageDetail.name)
-                                    Text(text = packageDetail.price)
+                                    val modifier =
+                                        Modifier.padding(vertical = 12.dp, horizontal = 16.dp)
+                                    Text(
+                                        text = packageDetail.name,
+                                        color = Color.White,
+                                        fontSize = 18.sp,
+                                        modifier = modifier
+                                    )
+                                    Text(
+                                        modifier = modifier.weight(1f, fill = false),
+                                        text = packageDetail.price,
+                                        color = Color.White,
+                                        fontSize = 18.sp,
+                                    )
                                 }
                             }
                         }
                         ClickableText(
                             text = annotatedString,
-                            modifier = Modifier.padding(start = 12.dp, top = 12.dp),
+                            modifier = Modifier.padding(start = 2.dp, top = 12.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             onClick = { offset ->
                                 annotatedString.getStringAnnotations(
@@ -92,16 +105,19 @@ fun PaymentPurchaseDialog(
                                     start = offset,
                                     end = offset
                                 ).firstOrNull()?.let {
-                                    Log.d("policy URL", it.item)
+                                    val intent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://boostyou.convocraftapp.com/privacy/?fbclid=IwAR1-P25P2zrElBlC1x9iyvsFHwQjlVgJ-lqQxDmUV-HCP3E7t3tnSFnUVdw")
+                                    )
+                                    activity.startActivity(intent)
                                 }
-
-                                annotatedString.getStringAnnotations(
-                                    tag = "terms",
-                                    start = offset,
-                                    end = offset
-                                ).firstOrNull()?.let {
-                                    Log.d("terms URL", it.item)
-                                }
+//                                annotatedString.getStringAnnotations(
+//                                    tag = "terms",
+//                                    start = offset,
+//                                    end = offset
+//                                ).firstOrNull()?.let {
+//                                    Log.d("terms URL", it.item)
+//                                }
                             })
                     }
             }
@@ -110,16 +126,16 @@ fun PaymentPurchaseDialog(
 }
 
 val annotatedString = buildAnnotatedString {
-    append("By joining, you agree to the ")
+   // append("Privacy Policy ")
     pushStringAnnotation(tag = "policy", annotation = "https://google.com/policy")
     withStyle(style = SpanStyle(color = Color.Blue)) {
-        append("privacy policy")
+        append("Privacy Policy")
     }
-    pop()
-    append(" and ")
-    pushStringAnnotation(tag = "terms", annotation = "https://google.com/terms")
-    withStyle(style = SpanStyle(color = Color.Blue)) {
-        append("terms of use")
-    }
-    pop()
+//    pop()
+//    append(" and ")
+//    pushStringAnnotation(tag = "terms", annotation = "https://google.com/terms")
+//    withStyle(style = SpanStyle(color = Color.Blue)) {
+//        append("terms of use")
+//    }
+//    pop()
 }

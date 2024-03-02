@@ -121,7 +121,11 @@ class GoogleBillingServiceImpl(
     }
 
     private suspend fun fetchProductDetails(): PackageDetailsResponse {
-        val productDetailsResult = billingClient?.queryProductDetails(initProductDetailsParams())
+        val productDetailsResult = initProductDetailsParams()?.let {
+            billingClient?.queryProductDetails(
+                it
+            )
+        }
         return when (productDetailsResult?.billingResult?.responseCode) { ///todo Packages data from google
             BillingClient.BillingResponseCode.OK -> PackageDetailsResponse(
                 PackageDetailsStatus.Ok,
@@ -133,13 +137,16 @@ class GoogleBillingServiceImpl(
         }
     }
 
-    private fun initProductDetailsParams(): QueryProductDetailsParams {
+    private fun initProductDetailsParams(): QueryProductDetailsParams? {
         val productList = remotePackages?.map {
             QueryProductDetailsParams.Product.newBuilder().setProductId(it.packageId.orEmpty())
                 .setProductType(BillingClient.ProductType.INAPP).build()
         }
-        return QueryProductDetailsParams.newBuilder().setProductList(productList.orEmpty())
-            .build()
+        if (!productList.isNullOrEmpty()){
+            return QueryProductDetailsParams.newBuilder().setProductList(productList.orEmpty())
+                .build()
+        }
+        return null
     }
 
 

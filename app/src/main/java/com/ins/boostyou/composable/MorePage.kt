@@ -2,7 +2,8 @@
 
 package com.ins.boostyou.composable
 
-import android.util.Log
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,8 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -42,7 +41,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ins.boostyou.R
+import com.ins.boostyou.constants.enum.AlertPopupType
 import com.ins.boostyou.controller.FileDataUtils
+import com.ins.boostyou.utils.findActivity
 import com.ins.boostyou.utils.noRippleClickable
 import com.ins.boostyou.viewModel.BaseViewModel.Companion.launchOnBackground
 import com.ins.boostyou.viewModel.ComposeNavigationViewModel
@@ -58,7 +59,8 @@ fun MorePage(
 ) {
     var isBuyCoinsSelected by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-
+    val context = LocalContext.current
+    val activity = context.findActivity()
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -82,17 +84,14 @@ fun MorePage(
     }
 
 
-
     Column(
         Modifier
             .background(Color.White)
     ) {
-//        Button(onClick = {
-//           // inAppPurchaseViewModel.launchInAppBillingFlow(activity,"com.boost.coin30")
-//            inAppPurchaseViewModel.launchInAppBillingFlow(activity,"android.test.purchased")
-//        }) {
-//        }
-        DropdownUsers(mainActivityViewModel)
+
+        if (mainActivityViewModel.getUserListSize(context) > 0){
+            DropdownUsers(mainActivityViewModel)
+        }
 
         Divider(thickness = 4.dp, color = Color(0xFFD9DDE1))
         Column(
@@ -115,14 +114,14 @@ fun MorePage(
             modifier = Modifier.fillMaxWidth()
         ) {
             val coroutineScope = rememberCoroutineScope()
-            Text(text = "Option",
-                //style = TextStyle(
-                //fontSize = 16.sp
-                //  ),
+            Text(text = "Log Out",
                 fontSize = 16.sp,
                 modifier = Modifier
                     .clickable {
-
+                        composeNavigationViewModel.selectedTabItem = 0
+                        coroutineScope.launch {
+                            mainActivityViewModel.logOut()
+                        }
                     }
                     .padding(horizontal = 32.dp, vertical = 24.dp)
                     .fillMaxWidth()
@@ -133,13 +132,28 @@ fun MorePage(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Log Out",
+            Text(text = "Remove Account",
                 modifier = Modifier
                     .clickable {
-                        composeNavigationViewModel.selectedTabItem = 0
-                        coroutineScope.launch {
-                            mainActivityViewModel.logOut()
-                        }
+                        mainActivityViewModel.showPopupType = AlertPopupType.REMOVE_ACCOUNT
+                    }
+                    .padding(horizontal = 32.dp, vertical = 24.dp)
+                    .fillMaxWidth()
+            )
+        }
+        Divider(thickness = 4.dp, color = Color(0xFFD9DDE1))
+
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Terms & Conditions",
+                modifier = Modifier
+                    .clickable {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://boostyou.convocraftapp.com/privacy/?fbclid=IwAR1-P25P2zrElBlC1x9iyvsFHwQjlVgJ-lqQxDmUV-HCP3E7t3tnSFnUVdw")
+                        )
+                        activity.startActivity(intent)
                     }
                     .padding(horizontal = 32.dp, vertical = 24.dp)
                     .fillMaxWidth()
@@ -160,7 +174,9 @@ fun DropdownUsers(mainActivityViewModel: MainActivityViewModel) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .noRippleClickable {
-            expanded = true
+            if (userList?.isNotEmpty() == true && userList.size > 1) {
+                expanded = true
+            }
         }
     ) {
         Row(
@@ -195,13 +211,16 @@ fun DropdownUsers(mainActivityViewModel: MainActivityViewModel) {
                 ) "@" + mainActivityViewModel.userData.userName.orEmpty() else ""
             )
 
-            Image(
-                painter = painterResource(id = R.drawable.ic_arrow_down_fill),
-                contentDescription = "",
-                Modifier
-                    .size(32.dp, 32.dp)
-                    .padding(start = 12.dp, top = 12.dp)
-            )
+            if (userList?.isNotEmpty() == true && userList.size > 1) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_arrow_down_fill),
+                    contentDescription = "",
+                    Modifier
+                        .size(32.dp, 32.dp)
+                        .padding(start = 12.dp, top = 12.dp)
+                )
+            }
+
         }
         if (userList.isNullOrEmpty()) {
             return
@@ -232,7 +251,6 @@ fun DropdownUsers(mainActivityViewModel: MainActivityViewModel) {
                                 modifier = Modifier
                                     .padding(end = 12.dp)
                                     .noRippleClickable {
-                                        Log.d("dwd", "LogOut user - $s")
                                         FileDataUtils.removeAccountFromSavedList(s, context)
                                         expanded = false
                                     },

@@ -1,6 +1,5 @@
 package com.ins.boostyou.composable
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +35,7 @@ fun CreateCommentsDialog(
     inAppPurchaseViewModel: InAppPurchaseViewModel,
     popupTitle: String? = null,
     onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit
+    onConfirmation: (List<String>) -> Unit
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
@@ -48,13 +47,19 @@ fun CreateCommentsDialog(
         ) {
             DynamicTextFieldScreen(onDismissRequest = {
                 onDismissRequest()
-            })
+            },
+                onConfirmation = {
+                    onConfirmation(it)
+                })
         }
     }
 }
 
 @Composable
-fun DynamicTextFieldScreen(onDismissRequest: () -> Unit) {
+fun DynamicTextFieldScreen(
+    onDismissRequest: () -> Unit,
+    onConfirmation: (List<String>) -> Unit
+) {
     var textFieldList by remember { mutableStateOf(listOf("")) }
     Column(verticalArrangement = Arrangement.SpaceBetween) {
         Text(
@@ -71,7 +76,7 @@ fun DynamicTextFieldScreen(onDismissRequest: () -> Unit) {
             ) {
             DynamicTextFieldList(
                 textFieldList,
-                onChange = {
+                onItemChange = {
                     textFieldList = it
                 })
         }
@@ -81,7 +86,6 @@ fun DynamicTextFieldScreen(onDismissRequest: () -> Unit) {
                 .padding(18.dp)
                 .fillMaxWidth()
                 .clickable {
-                    Log.d("dwd", "COMMNET $textFieldList")
                 }) {
             Button(
                 onClick = {
@@ -91,7 +95,7 @@ fun DynamicTextFieldScreen(onDismissRequest: () -> Unit) {
             }
             Button(
                 onClick = {
-
+                    onConfirmation(textFieldList)
                 }) {
                 Text("Confirm")
             }
@@ -103,14 +107,14 @@ fun DynamicTextFieldScreen(onDismissRequest: () -> Unit) {
 @Composable
 fun DynamicTextFieldList(
     textFieldList: List<String>,
-    onChange: (List<String>) -> Unit
+    onItemChange: (List<String>) -> Unit
 ) {
     Column {
         textFieldList.forEachIndexed { index, text ->
             TextField(
                 value = text,
                 onValueChange = {
-                    onChange(textFieldList.toMutableList().apply { set(index, it) })
+                    onItemChange(textFieldList.toMutableList().apply { set(index, it) })
                 },
                 label = { Text("Comment ${index.plus(1)}") },
                 modifier = Modifier
@@ -118,18 +122,38 @@ fun DynamicTextFieldList(
                     .padding(2.dp)
             )
         }
-        IconButton(
-            onClick = {
-                onChange(textFieldList + "")
-            },
-            modifier = Modifier
-                .size(48.dp)
-                .padding(8.dp)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_add),
-                contentDescription = "Add TextField",
-            )
+        Row {
+            IconButton(
+                onClick = {
+                    onItemChange(textFieldList + "")
+                },
+                modifier = Modifier
+                    .size(48.dp)
+                    .padding(8.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_add),
+                    contentDescription = "Add TextField",
+                )
+            }
+
+            if (textFieldList.size == 1){
+                return
+            }
+            IconButton(
+                onClick = {
+                    onItemChange(textFieldList - "")
+                },
+                modifier = Modifier
+                    .size(50.dp)
+                    .padding(8.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_minus),
+                    contentDescription = "Remove TextField",
+                )
+            }
         }
+
     }
 }

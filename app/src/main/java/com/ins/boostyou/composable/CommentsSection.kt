@@ -88,11 +88,11 @@ fun CommentsSectionItem(
                 .border(BorderStroke(2.dp, Color(0xFFF05161)))
                 .padding(horizontal = 12.dp, vertical = 8.dp)
                 .clickable {
-//                    mainActivityViewModel.boostYouTaskRequest.apply {
-//                        taskType = 3
-//                        quality = qualityValue
-//                        count = item.count
-//                    }
+                    mainActivityViewModel.boostYouTaskRequest.apply {
+                        taskType = 4
+                        count = item.count
+                        price = item.price
+                    }
                     if (mainActivityViewModel.boostYouTaskRequest.serviceUrl.isNullOrEmpty()) {
                         mainActivityViewModel.showPopupType = AlertPopupType.NO_IMAGE_SELECTED
                         return@clickable

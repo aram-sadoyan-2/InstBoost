@@ -118,7 +118,8 @@ interface RetrofitPostServiceApi {
         @Field("quality") quality: Int? = null,
         @Field("count") count: Int? = null,
         @Field("user_name") userName: String? = null,
-        @Field("comments") comments: List<String>? = null
+        @Field("comments") comments: List<String>? = null,
+        @Field("price") price: Int? = null
     ): BaseResponse?
 
 

@@ -24,6 +24,8 @@ abstract class BaseViewModel(
 
     var showPopupType by mutableStateOf(AlertPopupType.NONE)
 
+    fun isDoneIcon() = loadingState == LoadingState.DONE_ICON
+
     protected fun <T> Flow<T>.flowOnUI() = flowOn(dispatchers.mainDispatcher)
 
     protected fun <T> Flow<T>.flowOnBackground() = flowOn(dispatchers.defaultDispatcher)
