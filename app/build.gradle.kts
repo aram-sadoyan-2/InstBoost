@@ -15,8 +15,8 @@ android {
         applicationId = "com.ins.boostyou"
         minSdk = 24
         targetSdk = 34
-        versionCode = 11
-        versionName = "1.1.8"
+        versionCode = 15
+        versionName = "15"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
