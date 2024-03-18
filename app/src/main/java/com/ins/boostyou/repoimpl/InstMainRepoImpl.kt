@@ -103,9 +103,9 @@ class InstMainRepoImpl(
                         postUrl = "https://www.instagram.com/p/" + node.shortcode,
                         displayUrl = node.displayUrl,
                         thumbnailSrcUrl = node.thumbnailSrc,
-                        likeCount = node.edgeLikedBy.count,
-                        likeMediaPreviewCount = node.edgeMediaPreviewLike.count,
-                        commentCount = node.edgeMediaToComment.count,
+                        likeCount = node.edgeLikedBy?.count,
+                        likeMediaPreviewCount = node.edgeMediaPreviewLike?.count,
+                        commentCount = node.edgeMediaToComment?.count,
                         mediaPreview = node.mediaPreview,
                         typeName = node.typename, // example - "GraphImage"
                         thumbnailResources = node.thumbnailResources,

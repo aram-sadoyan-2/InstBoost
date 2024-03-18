@@ -29,7 +29,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.core.content.ContextCompat.startActivity
 import com.ins.boostyou.utils.findActivity
 import com.ins.boostyou.viewModel.InAppPurchaseViewModel
 
@@ -101,23 +100,28 @@ fun PaymentPurchaseDialog(
                             style = MaterialTheme.typography.bodyMedium,
                             onClick = { offset ->
                                 annotatedString.getStringAnnotations(
+                                    tag = "terms",
+                                    start = offset,
+                                    end = offset
+                                ).firstOrNull()?.let {
+                                    val intent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://boostyou.convocraftapp.com/terms/?fbclid=IwAR06bc650ozfarDL42o0m6RrzvYUFwKjdd23QyXioGmG-yCGvL3MtY5aph8")
+                                    )
+                                    activity.startActivity(intent)
+                                }
+                                annotatedString.getStringAnnotations(
                                     tag = "policy",
                                     start = offset,
                                     end = offset
                                 ).firstOrNull()?.let {
                                     val intent = Intent(
                                         Intent.ACTION_VIEW,
-                                        Uri.parse("https://boostyou.convocraftapp.com/privacy/?fbclid=IwAR1-P25P2zrElBlC1x9iyvsFHwQjlVgJ-lqQxDmUV-HCP3E7t3tnSFnUVdw")
+                                        Uri.parse("https://boostyou.convocraftapp.com/privacy/?fbclid=IwAR3L7vbmpMeY0LKRO9NfjTyOvDaG4rKcjCOriADBUuOaeYuVUYzvAY_mvko")
                                     )
                                     activity.startActivity(intent)
                                 }
-//                                annotatedString.getStringAnnotations(
-//                                    tag = "terms",
-//                                    start = offset,
-//                                    end = offset
-//                                ).firstOrNull()?.let {
-//                                    Log.d("terms URL", it.item)
-//                                }
+
                             })
                     }
             }
@@ -127,15 +131,16 @@ fun PaymentPurchaseDialog(
 
 val annotatedString = buildAnnotatedString {
    // append("Privacy Policy ")
+
+    pushStringAnnotation(tag = "terms", annotation = "https://google.com/terms")
+    withStyle(style = SpanStyle(color = Color.Blue)) {
+        append("Terms of Use")
+    }
+    pop()
+    append(" and ")
     pushStringAnnotation(tag = "policy", annotation = "https://google.com/policy")
     withStyle(style = SpanStyle(color = Color.Blue)) {
         append("Privacy Policy")
     }
-//    pop()
-//    append(" and ")
-//    pushStringAnnotation(tag = "terms", annotation = "https://google.com/terms")
-//    withStyle(style = SpanStyle(color = Color.Blue)) {
-//        append("terms of use")
-//    }
-//    pop()
+    pop()
 }

@@ -146,12 +146,30 @@ fun MorePage(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Terms & Conditions",
+            Text(text = "Terms of Use",
                 modifier = Modifier
                     .clickable {
                         val intent = Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse("https://boostyou.convocraftapp.com/privacy/?fbclid=IwAR1-P25P2zrElBlC1x9iyvsFHwQjlVgJ-lqQxDmUV-HCP3E7t3tnSFnUVdw")
+                            Uri.parse("https://boostyou.convocraftapp.com/terms/?fbclid=IwAR06bc650ozfarDL42o0m6RrzvYUFwKjdd23QyXioGmG-yCGvL3MtY5aph8")
+                        )
+                        activity.startActivity(intent)
+                    }
+                    .padding(horizontal = 32.dp, vertical = 24.dp)
+                    .fillMaxWidth()
+            )
+        }
+        Divider(thickness = 4.dp, color = Color(0xFFD9DDE1))
+
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Privacy Policy",
+                modifier = Modifier
+                    .clickable {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://boostyou.convocraftapp.com/privacy/?fbclid=IwAR3L7vbmpMeY0LKRO9NfjTyOvDaG4rKcjCOriADBUuOaeYuVUYzvAY_mvko")
                         )
                         activity.startActivity(intent)
                     }

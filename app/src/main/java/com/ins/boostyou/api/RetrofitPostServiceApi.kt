@@ -23,6 +23,17 @@ interface RetrofitPostServiceApi {
         @Header("X-Requested-With") requestedWith: String,
     ): InstPrData?
 
+//    @GET("https://www.instagram.com/api/v1/users/web_profile_info/")
+//    suspend fun getPostDataFromNewJson2(
+//        @Query("username") userName: String,
+//        @Header("sec-fetch-dest") secFetchDest: String,
+//        @Header("sec-fetch-mode") secFetchMode: String,
+//        @Header("sec-fetch-site") secFetchSite: String,
+//        @Header("X-IG-App-ID") appId: Long,
+//        @Header("X-IG-WWW-Claim") claim: Int,
+//        @Header("X-Requested-With") requestedWith: String,
+//    ): String?
+
     @GET("https://www.instagram.com/api/v1/users/web_profile_info/")
     suspend fun getPostDataFromNewJsonTest(
         @Query("username") userName: String,
@@ -104,8 +115,6 @@ interface RetrofitPostServiceApi {
         @Header("action") action: String? = "subtrackUserCoinsIfSpent",
         @Field("coins_minused") coinsMinus: String,
     ): Any?
-
-
 
 
 

@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
 //                    if (!isFinishing) {
 //                        launchOnUi { showHideDialog(true) }
 //                    }
+                    //todo handle inApp purchase
                     inAppPurchaseState.run {
 //                        shopSubscribeViewModel.validateInAppPurchase(
 //                            InAppValidateRequestBody(

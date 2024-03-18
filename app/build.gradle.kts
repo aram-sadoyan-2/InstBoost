@@ -15,8 +15,8 @@ android {
         applicationId = "com.ins.boostyou"
         minSdk = 24
         targetSdk = 34
-        versionCode = 15
-        versionName = "15"
+        versionCode = 16
+        versionName = "16"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -26,7 +26,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

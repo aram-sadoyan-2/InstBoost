@@ -14,10 +14,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ins.boostyou.R
 import com.ins.boostyou.utils.noRippleClickable
 import com.ins.boostyou.viewModel.InAppPurchaseViewModel
@@ -42,6 +44,7 @@ fun TopCoinInfo(
     }
     Row(
         horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 2.dp)
@@ -61,13 +64,13 @@ fun TopCoinInfo(
             painter = painterResource(id = R.drawable.ic_coin),
             contentDescription = "",
             Modifier
-                .size(26.dp, 26.dp)
+                .size(32.dp, 32.dp)
                 .padding(top = 2.dp)
         )
         Text(
             text = mainActivityViewModel.userInfo.coinsCount.toString(),
             Modifier.padding(vertical = 4.dp).padding(start = 4.dp, end = 12.dp),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }

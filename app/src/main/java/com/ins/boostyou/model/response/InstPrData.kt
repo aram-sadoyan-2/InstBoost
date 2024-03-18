@@ -206,7 +206,7 @@ data class Node(
     @SerializedName("display_url")
     val displayUrl: String,
     @SerializedName("edge_media_to_tagged_user")
-    val edgeMediaToTaggedUser: EdgeMediaToTaggedUser,
+    val edgeMediaToTaggedUser: EdgeMediaToTaggedUser?,
     @SerializedName("fact_check_overall_rating")
     val factCheckOverallRating: Any?,
     @SerializedName("fact_check_information")
@@ -214,7 +214,7 @@ data class Node(
     @SerializedName("gating_info")
     val gatingInfo: Any?,
     @SerializedName("sharing_friction_info")
-    val sharingFrictionInfo: SharingFrictionInfo,
+    val sharingFrictionInfo: SharingFrictionInfo?,
     @SerializedName("media_overlay_info")
     val mediaOverlayInfo: Any?,
     @SerializedName("media_preview")
@@ -237,22 +237,22 @@ data class Node(
     @SerializedName("video_view_count")
     val videoViewCount: Long?,
     @SerializedName("edge_media_to_caption")
-    val edgeMediaToCaption: EdgeMediaToCaption,
+    val edgeMediaToCaption: EdgeMediaToCaption?,
     @SerializedName("edge_media_to_comment")
-    val edgeMediaToComment: EdgeMediaToComment,
+    val edgeMediaToComment: EdgeMediaToComment?,
     @SerializedName("comments_disabled")
     val commentsDisabled: Boolean,
     @SerializedName("taken_at_timestamp")
     val takenAtTimestamp: Long,
     @SerializedName("edge_liked_by")
-    val edgeLikedBy: EdgeLikedBy,
+    val edgeLikedBy: EdgeLikedBy?,
     @SerializedName("edge_media_preview_like")
-    val edgeMediaPreviewLike: EdgeMediaPreviewLike,
+    val edgeMediaPreviewLike: EdgeMediaPreviewLike?,
     val location: Location?,
     @SerializedName("nft_asset_info")
     val nftAssetInfo: Any?,
     @SerializedName("thumbnail_src")
-    val thumbnailSrc: String,
+    val thumbnailSrc: String?,
     @SerializedName("thumbnail_resources")
     val thumbnailResources: List<ThumbnailResource>,
     @SerializedName("felix_profile_grid_crop")
