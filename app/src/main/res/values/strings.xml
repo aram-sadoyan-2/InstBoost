@@ -3,9 +3,6 @@
 
     <string name="client_id" translatable="false">705882251747367</string>
     <string name="client_secret" translatable="false">b6f9fb05ad0ae5ad6e20a96dd521a619</string>
-    <!--<string name="redirect_url" translatable="false">https://instagram.com/</string>-->
-    <string name="redirect_url" translatable="false">https://github.com/aram-sadoyan-2/TikTkBst/</string>
-    <!--    <string name="base_url" translatable="false">https://api.instagram.com/</string>-->
     <string name="base_url" translatable="false">https://api.instagram.com/oauth/authorize?</string>
 
 
