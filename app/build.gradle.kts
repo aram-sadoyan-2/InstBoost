@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+
 android {
     namespace = "com.ins.boostyou"
     compileSdk = 34
@@ -15,8 +16,8 @@ android {
         applicationId = "com.ins.boostyou"
         minSdk = 24
         targetSdk = 34
-        versionCode = 16
-        versionName = "16"
+        versionCode = 17
+        versionName = "17"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
